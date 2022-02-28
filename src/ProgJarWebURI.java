@@ -3,6 +3,9 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocketFactory;
+
 public class ProgJarWebURI {
 
     public static void main(String[] args) throws IOException {
@@ -26,12 +29,21 @@ public class ProgJarWebURI {
         String server = inputURL[0];
         String path = inputURL.length == 1 ? "/" : ("/" + inputURL[1]);
 
-        Socket socket = new Socket(server, protocol == "http" ? 80 : 443);
+        final SocketFactory socketFactory = SSLSocketFactory.getDefault();
+        final Socket socket;
+        String request;
+        if (protocol == "http") {
+            socket = new Socket(server, 80);
+            request = ("GET " + path + " HTTP/1.1\r\nHost: " + server + "\r\n\r\n");
+        } else {
+            socket = socketFactory.createSocket(server, 443);
+            request = ("GET " + path + " HTTP/1.1\r\nConnection: close\r\nHost: " + server + "\r\n\r\n");
+        }
 
         BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
         BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
 
-        bos.write(("GET " + path + " " + protocol.toUpperCase() + "/1.1\r\nHost: " + server + "\r\n\r\n").getBytes());
+        bos.write(request.getBytes());
         bos.flush();
 
         byte[] c = bis.readAllBytes();
@@ -44,7 +56,7 @@ public class ProgJarWebURI {
         socket.close();
     }
 
-    private static void showLinks(String response) {
+    public static void showLinks(String response) {
         ArrayList<ArrayList<Object>> anchors = new ArrayList<ArrayList<Object>>();
         Scanner resp = new Scanner(response);
         boolean isClosed = true;
