@@ -9,7 +9,7 @@ public class ProgJarWebURI {
 
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter valid URL\t: ");
+        System.out.print(ConsoleColors.BLUE + "Enter valid URL\t: " + ConsoleColors.RESET);
         String input = sc.nextLine();
         sc.close();
 
@@ -20,11 +20,39 @@ public class ProgJarWebURI {
             response = new Response(openURL(response.getNewLocation()));
         }
 
+        if(checkErrorCode(response))
+            System.exit(0);
+
         System.out.println(response.getTextResponse());
         System.out.println("==============================");
         response.showLinks();
         System.out.println("==============================");
-        downloadFile("http://www.africau.edu/images/default/sample.pdf");
+//        downloadFile("http://www.africau.edu/images/default/sample.pdf");
+    }
+
+    public static boolean checkErrorCode(Response resp){
+        char firstCode = resp.getCode().charAt(0);
+        switch (firstCode){
+            case '4':
+                System.out.println(
+                        ConsoleColors.RED
+                        + "==|| Halaman Tidak dapat ditemukan :p - Status : "
+                        + ConsoleColors.RED_BACKGROUND_BRIGHT+firstCode+"xx"+ConsoleColors.RED
+                        + " ||=="
+                        + ConsoleColors.RESET
+                );
+                return true;
+            case '5':
+                System.out.println(
+                        ConsoleColors.RED
+                                + "==|| Server meng-kacang-in kamu :( - Status : "
+                                + ConsoleColors.RED_BACKGROUND_BRIGHT+firstCode+"xx"+ConsoleColors.RED
+                                + " ||=="
+                                + ConsoleColors.RESET
+                );
+                return true;
+        }
+        return false;
     }
 
     public static String openURL(String URL) throws UnknownHostException, IOException {
