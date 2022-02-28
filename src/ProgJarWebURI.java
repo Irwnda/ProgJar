@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.net.SocketFactory;
@@ -15,8 +14,8 @@ public class ProgJarWebURI {
         sc.close();
 
         Response response = new Response(openURL(input));
-        if (response.getCode() == 301) {
-            System.out.println("Redirecting to " + response.getNewLocation());
+        while (response.getCode().charAt(0) == '3') {
+            System.out.println("Redirecting to: " + response.getNewLocation());
             System.out.println("==============================");
             response = new Response(openURL(response.getNewLocation()));
         }

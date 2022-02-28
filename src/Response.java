@@ -1,8 +1,7 @@
 import java.util.*;
 
 public class Response {
-
-    private int code;
+    private String code;
     private String newLocation;
     private String textResponse;
     private ArrayList<String> linkURLs;
@@ -18,9 +17,8 @@ public class Response {
         this.linkURLs = new ArrayList<String>();
         this.linkTexts = new ArrayList<String>();
 
-        if (this.code == 301) {
+        if (this.code.charAt(0) == '3')
             this.setNewLocation();
-        }
 
         while (resp.hasNextLine()) {
             String line = resp.nextLine();
@@ -44,7 +42,7 @@ public class Response {
         resp.close();
     }
 
-    public int getCode() {
+    public String getCode() {
         return this.code;
     }
 
@@ -119,11 +117,11 @@ public class Response {
         // This is to show the element inside anchor tag if there is only one element.
     }
 
-    private static int getCode(String response) {
+    private static String getCode(String response) {
         Scanner resp = new Scanner(response);
         String[] respCode = resp.nextLine().split(" ");
         resp.close();
-        return Integer.parseInt(respCode[1]);
+        return respCode[1];
     }
 
     public void showLinks() {
