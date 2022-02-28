@@ -24,6 +24,7 @@ public class ProgJarWebURI {
         System.out.println("==============================");
         response.showLinks();
         System.out.println("==============================");
+        downloadFile("http://www.africau.edu/images/default/sample.pdf");
     }
 
     public static String openURL(String URL) throws UnknownHostException, IOException {
@@ -65,5 +66,42 @@ public class ProgJarWebURI {
         socket.close();
 
         return new String(c);
+    }
+
+    public static void downloadFile(String link) throws UnknownHostException, IOException {
+        try {
+            URL url = new URL(link);
+            File out = new File("file.pdf");
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+
+            double fileSize = (double) http.getContentLengthLong();
+            BufferedInputStream bis = new BufferedInputStream(http.getInputStream());
+            FileOutputStream fos = new FileOutputStream(out);
+            BufferedOutputStream bos = new BufferedOutputStream(fos, 1024);
+
+            byte[] buffer = new byte[1024];
+            double downloaded = 0.00;
+            int read = 0;
+            double percentDownloaded = 0.00;
+
+            while ((read = bis.read(buffer, 0, 1024)) >= 0) {
+                bos.write(buffer, 0, read);
+                downloaded += (read);
+                percentDownloaded = (downloaded * 100 / fileSize);
+                String percent = String.format("%.4f", percentDownloaded);
+                System.out.println("Downloaded " + percent + "% of file.");
+            }
+
+            bos.close();
+            bis.close();
+            System.out.println("Download completed");
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 }
