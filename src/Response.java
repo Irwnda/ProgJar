@@ -70,18 +70,19 @@ public class Response {
     }
 
     /**
-     * Show text content of the response [ INSIDE <body></body> TAG ONLY ]
+     * Show text content of the response [ EXCLUDE HEADER ]
      */
     public void showTextResponse() {
         System.out.println(ConsoleColors.YELLOW + "\n####### Response Text :" + ConsoleColors.RESET);
 
-        int idxOfContent = this.textResponse.indexOf('<');
-        String content = this.textResponse.substring( idxOfContent );
+        String content = this.textResponse;
+        int idxOfContent = content.indexOf('<');
+        content = this.textResponse.substring( idxOfContent );
 
-        int idxOfOpnBody = content.indexOf("<body>");
-        int idxOfClsBody = content.indexOf("</body>");
-
-        content = content.substring( idxOfOpnBody, idxOfClsBody+8 );
+//        int idxOfOpnBody = content.indexOf("<body>");
+//        int idxOfClsBody = content.indexOf("</body>");
+//
+//        content = content.substring( idxOfOpnBody, idxOfClsBody+8 );
 
         System.out.println( content );
 
