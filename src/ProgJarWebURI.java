@@ -22,7 +22,7 @@ public class ProgJarWebURI {
          * Check if response need redirect, make a new request to new url if so
          */
         while ( response.checkNewLocation() ) {
-            System.out.println(ConsoleColors.YELLOW + "####### Redirecting to: " + response.getNewLocation() + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.YELLOW + "####### Redirecting to : \n" + response.getNewLocation() + ConsoleColors.RESET);
             response = new Response(openURL(response.getNewLocation()));
         }
 
@@ -45,7 +45,7 @@ public class ProgJarWebURI {
     /**
      * Open connection to specified URL
      * @param URL
-     * @return
+     * @return response
      * @throws UnknownHostException
      * @throws IOException
      */

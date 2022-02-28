@@ -70,10 +70,20 @@ public class Response {
     }
 
     /**
-     * Show text content of the response
+     * Show text content of the response [ INSIDE <body></body> TAG ONLY ]
      */
     public void showTextResponse() {
-        System.out.println(this.textResponse);
+        System.out.println(ConsoleColors.YELLOW + "\n####### Response Text :" + ConsoleColors.RESET);
+
+        int idxOfContent = this.textResponse.indexOf('<');
+        String content = this.textResponse.substring( idxOfContent );
+
+        int idxOfOpnBody = content.indexOf("<body>");
+        int idxOfClsBody = content.indexOf("</body>");
+
+        content = content.substring( idxOfOpnBody, idxOfClsBody+8 );
+
+        System.out.println( content );
 
     }
 
@@ -176,13 +186,13 @@ public class Response {
      * Show respective response's clickable link
      */
     public void showLinks() {
-        System.out.println("================\nClickable links:");
+        System.out.println(ConsoleColors.YELLOW + "\n####### Clickable links :" + ConsoleColors.RESET);
         if (this.linkURLs.size() == 0)
             System.out.println("1.\t-");
         else
             for (int i = 0; i < this.linkURLs.size(); i++) {
                 System.out.println((i + 1) + ".\t" + linkURLs.get(i));
-                System.out.println("\t" + linkTexts.get(i) + "\n");
+                System.out.println("\t" + linkTexts.get(i) + "");
             }
     }
 
