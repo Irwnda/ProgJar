@@ -13,48 +13,42 @@ public class ProgJarWebURI {
         String input = sc.nextLine();
         sc.close();
 
+        /**
+         * Make a request then save it as Response
+         */
         Response response = new Response(openURL(input));
-        while (response.getCode().charAt(0) == '3') {
-            System.out.println("Redirecting to: " + response.getNewLocation());
-            System.out.println("==============================");
+
+        /**
+         * Check if response need redirect, make a new request to new url if so
+         */
+        while ( response.checkNewLocation() ) {
+            System.out.println(ConsoleColors.YELLOW + "####### Redirecting to: " + response.getNewLocation() + ConsoleColors.RESET);
             response = new Response(openURL(response.getNewLocation()));
         }
 
-        if(checkErrorCode(response))
+        /**
+         * Show Error if response has error code, otherwise show response text
+         */
+        if( response.checkErrorCode() )
             System.exit(0);
+        else
+            response.showTextResponse();
+        /**
+         * Check  if response have anchor tag, show the link if so
+         */
+        if( response.checkAnchor() )
+            response.showLinks();
 
-        System.out.println(response.getTextResponse());
-        System.out.println("==============================");
-        response.showLinks();
-        System.out.println("==============================");
-//        downloadFile("http://www.africau.edu/images/default/sample.pdf");
+        // downloadFile("http://www.africau.edu/images/default/sample.pdf");
     }
 
-    public static boolean checkErrorCode(Response resp){
-        char firstCode = resp.getCode().charAt(0);
-        switch (firstCode){
-            case '4':
-                System.out.println(
-                        ConsoleColors.RED
-                        + "==|| Halaman Tidak dapat ditemukan :p - Status : "
-                        + ConsoleColors.RED_BACKGROUND_BRIGHT+firstCode+"xx"+ConsoleColors.RED
-                        + " ||=="
-                        + ConsoleColors.RESET
-                );
-                return true;
-            case '5':
-                System.out.println(
-                        ConsoleColors.RED
-                                + "==|| Server meng-kacang-in kamu :( - Status : "
-                                + ConsoleColors.RED_BACKGROUND_BRIGHT+firstCode+"xx"+ConsoleColors.RED
-                                + " ||=="
-                                + ConsoleColors.RESET
-                );
-                return true;
-        }
-        return false;
-    }
-
+    /**
+     * Open connection to specified URL
+     * @param URL
+     * @return
+     * @throws UnknownHostException
+     * @throws IOException
+     */
     public static String openURL(String URL) throws UnknownHostException, IOException {
         String[] inputURL;
         String protocol;
@@ -96,6 +90,12 @@ public class ProgJarWebURI {
         return new String(c);
     }
 
+    /**
+     * Download file from specified link, save it in file
+     * @param link
+     * @throws UnknownHostException
+     * @throws IOException
+     */
     public static void downloadFile(String link) throws UnknownHostException, IOException {
         try {
             URL url = new URL(link);
