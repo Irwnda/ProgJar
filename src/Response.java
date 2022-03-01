@@ -11,9 +11,11 @@ public class Response {
 
     /**
      * Response Constructor
+     * 
      * @param response
      */
     public Response(String response) {
+        System.out.println(response);
         this.code = extractStatusCode(response);
         this.newLocation = "";
         this.textResponse = response;
@@ -27,9 +29,10 @@ public class Response {
 
     /**
      * Check if response have anchor tag, extract the link and show it if so
+     * 
      * @return hasValidAnchor
      */
-    public boolean checkAnchor(){
+    public boolean checkAnchor() {
         Scanner resp = new Scanner(this.body);
         boolean isClosed = true;
         boolean hasValidAnchor = false;
@@ -60,6 +63,7 @@ public class Response {
 
     /**
      * Get response's status code
+     * 
      * @return statusCode
      */
     public String getCode() {
@@ -68,31 +72,31 @@ public class Response {
 
     /**
      * Get New Location as redirection needs
+     * 
      * @return newLocation
      */
     public String getNewLocation() {
         return this.newLocation;
     }
 
-    public void separateResponse(){
+    public void separateResponse() {
         String rawResp = this.textResponse;
         int idxOfContent = rawResp.indexOf('<');
 
-        this.header = rawResp.substring( 0, idxOfContent-1 );
-        this.body = rawResp.substring( idxOfContent );
+        this.header = rawResp.substring(0, idxOfContent - 1);
+        this.body = rawResp.substring(idxOfContent);
     }
 
-    public void separateResponseWithBlank(){
+    public void separateResponseWithBlank() {
         Scanner sc = new Scanner(this.textResponse);
-        Boolean isBlank =false;
+        Boolean isBlank = false;
         while (sc.hasNextLine()) {
             String line = sc.nextLine();
             // if not blank keep add line to header string
             if (line != "" && !isBlank) {
                 this.header += line + '\n';
                 continue;
-            }
-            else if(line == "" && !isBlank){
+            } else if (line == "" && !isBlank) {
                 isBlank = true;
                 continue;
             }
@@ -108,23 +112,23 @@ public class Response {
     public void showTextResponse() {
         System.out.println(ConsoleColors.YELLOW + "\n####### Response Text :" + ConsoleColors.RESET);
 
-//        String content = this.textResponse;
-//        int idxOfContent = content.indexOf('<');
-//        content = this.textResponse.substring( idxOfContent );
+        // String content = this.textResponse;
+        // int idxOfContent = content.indexOf('<');
+        // content = this.textResponse.substring( idxOfContent );
 
-//        int idxOfOpnBody = content.indexOf("<body>");
-//        int idxOfClsBody = content.indexOf("</body>");
-//
-//        content = content.substring( idxOfOpnBody, idxOfClsBody+8 );
+        // int idxOfOpnBody = content.indexOf("<body>");
+        // int idxOfClsBody = content.indexOf("</body>");
+        //
+        // content = content.substring( idxOfOpnBody, idxOfClsBody+8 );
 
-        System.out.println( this.header );
-        System.out.println( this.body );
-
+         System.out.println( this.header );
+         System.out.println( this.body );
 
     }
 
     /**
      * Check if response define new location as redirection needs
+     * 
      * @return hasRedirectLink
      */
     public boolean checkNewLocation() {
@@ -152,6 +156,7 @@ public class Response {
 
     /**
      * Get link of the line of scanned response
+     * 
      * @param line
      * @return listOfLinkComponent
      */
@@ -179,6 +184,7 @@ public class Response {
 
     /**
      * Exclude anchor tag that refer to same page (like '#')
+     * 
      * @param linkInfo
      * @return isValidLink
      */
@@ -188,6 +194,7 @@ public class Response {
 
     /**
      * Delete html tag like header, paragraph, div, etc.
+     * 
      * @param linkInfo
      * @return textOnlyLink
      */
@@ -208,6 +215,7 @@ public class Response {
 
     /**
      * Extract response's HTTP status code
+     * 
      * @param response
      * @return statusCode
      */
@@ -234,28 +242,27 @@ public class Response {
 
     /**
      * Check response's status code, and show appropriate error message
+     * 
      * @return isError
      */
-    public boolean checkErrorCode(){
+    public boolean checkErrorCode() {
         char firstCode = this.getCode().charAt(0);
-        switch (firstCode){
+        switch (firstCode) {
             case '4':
                 System.out.println(
                         ConsoleColors.RED
                                 + "==|| Halaman Tidak dapat ditemukan :p - Status : "
-                                + ConsoleColors.RED_BACKGROUND_BRIGHT+firstCode+"xx"+ConsoleColors.RED
+                                + ConsoleColors.RED_BACKGROUND_BRIGHT + firstCode + "xx" + ConsoleColors.RED
                                 + " ||=="
-                                + ConsoleColors.RESET
-                );
+                                + ConsoleColors.RESET);
                 return true;
             case '5':
                 System.out.println(
                         ConsoleColors.RED
                                 + "==|| Server meng-kacang-in kamu :( - Status : "
-                                + ConsoleColors.RED_BACKGROUND_BRIGHT+firstCode+"xx"+ConsoleColors.RED
+                                + ConsoleColors.RED_BACKGROUND_BRIGHT + firstCode + "xx" + ConsoleColors.RED
                                 + " ||=="
-                                + ConsoleColors.RESET
-                );
+                                + ConsoleColors.RESET);
                 return true;
         }
         return false;
