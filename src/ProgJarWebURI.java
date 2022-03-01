@@ -17,7 +17,6 @@ public class ProgJarWebURI {
          * Make a request then save it as Response
          */
         Response response = new Response(openURL(input));
-
         /**
          * Check if response need redirect, make a new request to new url if so
          */
@@ -38,6 +37,8 @@ public class ProgJarWebURI {
          */
         if( response.checkAnchor() )
             response.showLinks();
+        else
+            System.out.println( ConsoleColors.RED + "####### Anchor tag NOT Found !" + ConsoleColors.RESET );
 
         // downloadFile("http://www.africau.edu/images/default/sample.pdf");
     }
@@ -45,7 +46,7 @@ public class ProgJarWebURI {
     /**
      * Open connection to specified URL
      * @param URL
-     * @return response
+     * @return
      * @throws UnknownHostException
      * @throws IOException
      */

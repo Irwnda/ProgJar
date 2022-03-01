@@ -20,7 +20,8 @@ public class Response {
         this.linkURLs = new ArrayList<String>();
         this.linkTexts = new ArrayList<String>();
 
-        separateResponse();
+        // separateResponse();
+        separateResponseWithBlank();
 
     }
 
@@ -29,7 +30,7 @@ public class Response {
      * @return hasValidAnchor
      */
     public boolean checkAnchor(){
-        Scanner resp = new Scanner(this.textResponse);
+        Scanner resp = new Scanner(this.body);
         boolean isClosed = true;
         boolean hasValidAnchor = false;
 
@@ -81,6 +82,26 @@ public class Response {
         this.body = rawResp.substring( idxOfContent );
     }
 
+    public void separateResponseWithBlank(){
+        Scanner sc = new Scanner(this.textResponse);
+        Boolean isBlank =false;
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            // if not blank keep add line to header string
+            if (line != "" && !isBlank) {
+                this.header += line + '\n';
+                continue;
+            }
+            else if(line == "" && !isBlank){
+                isBlank = true;
+                continue;
+            }
+
+            this.body += line + '\n';
+        }
+        sc.close();
+    }
+
     /**
      * Show text content of the response [ EXCLUDE HEADER ]
      */
@@ -96,7 +117,9 @@ public class Response {
 //
 //        content = content.substring( idxOfOpnBody, idxOfClsBody+8 );
 
+        System.out.println( this.header );
         System.out.println( this.body );
+
 
     }
 
