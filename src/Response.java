@@ -3,6 +3,8 @@ import java.util.*;
 public class Response {
     private String code;
     private String newLocation;
+    private String body;
+    private String header;
     private String textResponse;
     private ArrayList<String> linkURLs;
     private ArrayList<String> linkTexts;
@@ -17,6 +19,8 @@ public class Response {
         this.textResponse = response;
         this.linkURLs = new ArrayList<String>();
         this.linkTexts = new ArrayList<String>();
+
+        separateResponse();
 
     }
 
@@ -69,22 +73,30 @@ public class Response {
         return this.newLocation;
     }
 
+    public void separateResponse(){
+        String rawResp = this.textResponse;
+        int idxOfContent = rawResp.indexOf('<');
+
+        this.header = rawResp.substring( 0, idxOfContent-1 );
+        this.body = rawResp.substring( idxOfContent );
+    }
+
     /**
      * Show text content of the response [ EXCLUDE HEADER ]
      */
     public void showTextResponse() {
         System.out.println(ConsoleColors.YELLOW + "\n####### Response Text :" + ConsoleColors.RESET);
 
-        String content = this.textResponse;
-        int idxOfContent = content.indexOf('<');
-        content = this.textResponse.substring( idxOfContent );
+//        String content = this.textResponse;
+//        int idxOfContent = content.indexOf('<');
+//        content = this.textResponse.substring( idxOfContent );
 
 //        int idxOfOpnBody = content.indexOf("<body>");
 //        int idxOfClsBody = content.indexOf("</body>");
 //
 //        content = content.substring( idxOfOpnBody, idxOfClsBody+8 );
 
-        System.out.println( content );
+        System.out.println( this.body );
 
     }
 
@@ -93,11 +105,11 @@ public class Response {
      * @return hasRedirectLink
      */
     public boolean checkNewLocation() {
-        Scanner sc = new Scanner(this.textResponse);
+        Scanner sc = new Scanner(this.header);
         while (sc.hasNextLine()) {
             String line = sc.nextLine();
             // 3xx redirect
-            if (line.indexOf("Location") != -1) {
+            if (line.indexOf("Location") != -1 || line.indexOf("location") != -1) {
                 String[] locationInfo = line.split(" ");
                 this.newLocation = locationInfo[1];
                 sc.close();
