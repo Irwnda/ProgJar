@@ -249,16 +249,16 @@ public class Response {
             case '4':
                 System.out.println(
                         ConsoleColors.RED
-                                + "==|| Halaman Tidak dapat ditemukan :p - Status : "
-                                + ConsoleColors.RED_BACKGROUND_BRIGHT + firstCode + "xx" + ConsoleColors.RED
+                                + "==|| MAAF, Anda melakukan kesalahan [Client Error] :p - Status : "
+                                + ConsoleColors.RED_BACKGROUND_BRIGHT + this.getCode() + ConsoleColors.RED
                                 + " ||=="
                                 + ConsoleColors.RESET);
                 return true;
             case '5':
                 System.out.println(
                         ConsoleColors.RED
-                                + "==|| Server meng-kacang-in kamu :( - Status : "
-                                + ConsoleColors.RED_BACKGROUND_BRIGHT + firstCode + "xx" + ConsoleColors.RED
+                                + "==|| MAAF, Server sedang tidur [Server Error] :( - Status : "
+                                + ConsoleColors.RED_BACKGROUND_BRIGHT + this.getCode() + ConsoleColors.RED
                                 + " ||=="
                                 + ConsoleColors.RESET);
                 return true;
