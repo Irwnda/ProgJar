@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import javax.net.SocketFactory;
@@ -50,11 +51,22 @@ public class ProgJarWebURI {
 
         bos.write(request.getBytes());
         bos.flush();
-        byte[] header = new byte[1024];
 
         try {
-            header = bis.readNBytes(5000);
-            Scanner sc = new Scanner(new String(header));
+            byte[] headerByte = new byte[1];
+            String headerStr = "";
+
+            while( bis.read( headerByte ) != -1 ){
+                headerStr += new String( headerByte );
+                if( headerStr.indexOf("\r\n\r\n") != -1 ){
+                    System.out.println(ConsoleColors.GREEN + "####### Header Scan COMPLETED" + ConsoleColors.RESET);
+                    break;
+                }
+
+                headerByte = new byte[1];
+            }
+
+            Scanner sc = new Scanner(headerStr);
 
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
@@ -91,13 +103,13 @@ public class ProgJarWebURI {
                                     ConsoleColors.RED + "####### Anchor tag NOT Found !" + ConsoleColors.RESET);
 
                     } else {
-                        downloadFile(userURL, new String(header));
+                        downloadFile(userURL, headerStr);
                     }
                 }
             }
         } catch (SocketException e) {
             System.out.println(e.getMessage());
-            downloadFile(userURL, new String(header));
+//            downloadFile(userURL, new String(header));
         }
         socket.close();
     }
@@ -111,6 +123,8 @@ public class ProgJarWebURI {
      * @throws IOException
      */
     public static String openURL(String URL) throws UnknownHostException, IOException {
+        System.out.println(ConsoleColors.GREEN + "####### Opening URL : " + URL + ConsoleColors.RESET);
+
         String[] inputURL;
         String protocol;
 
@@ -160,7 +174,8 @@ public class ProgJarWebURI {
      */
     public static void downloadFile(String link, String header) throws UnknownHostException, IOException {
         try {
-            System.out.println(header);
+            System.out.println(ConsoleColors.GREEN + "####### Downloading from URL : " + link + ConsoleColors.RESET);
+
             URL url = new URL(link);
             File out = new File("file2.pdf");
             HttpURLConnection http = (HttpURLConnection) url.openConnection();

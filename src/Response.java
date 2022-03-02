@@ -15,14 +15,12 @@ public class Response {
      * @param response
      */
     public Response(String response) {
-        System.out.println(response);
         this.code = extractStatusCode(response);
         this.newLocation = "";
         this.textResponse = response;
         this.linkURLs = new ArrayList<String>();
         this.linkTexts = new ArrayList<String>();
 
-        // separateResponse();
         separateResponseWithBlank();
 
     }
@@ -121,7 +119,7 @@ public class Response {
         //
         // content = content.substring( idxOfOpnBody, idxOfClsBody+8 );
 
-         System.out.println( this.header );
+         // System.out.println( this.header );
          System.out.println( this.body );
 
     }
