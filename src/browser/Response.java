@@ -1,3 +1,7 @@
+package browser;
+
+import utils.ConsoleColors;
+
 import java.util.*;
 
 public class Response {
