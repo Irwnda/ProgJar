@@ -60,7 +60,12 @@ public class Response {
                 }
             }
             else {
-                body = "404 Not Found";
+                try {
+                    FileInputStream fis = new FileInputStream(cfg.getDocRoot()+"/404.html");
+                    body = new String(fis.readAllBytes());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
 
             statusCode = "404 Not Found";
@@ -118,7 +123,10 @@ public class Response {
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
             String lastModified = sdf.format(file.lastModified());
 
-            response.append("        <td><a href=\"").append(urn).append("/").append(fileName).append("\">").append(fileName).append("</a></td>\n");
+            if(urn.charAt(urn.length()-1)=='/')
+                urn = urn.substring(0, urn.length()-1);
+
+            response.append("        <td><a href=\"/").append(urn).append("/").append(fileName).append("\">").append(fileName).append("</a></td>\n");
             response.append(file.isFile() ? "        <td>File</td>\n" : "        <td>Folder</td>\n");
             response.append("        <td>").append(lastModified).append("</td>\n");
             response.append("        <td>").append(Files.size(file.toPath())).append("</td>\n");
