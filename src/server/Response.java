@@ -34,6 +34,8 @@ public class Response {
         }
 
         // Determine the content type of requested urn
+        // TODO : Handle every kind of type respectively
+
         String text[] = {"html", "php", "txt"};
         String ext = urn.split("\\.")[1];
 
