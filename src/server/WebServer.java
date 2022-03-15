@@ -31,7 +31,7 @@ public class WebServer {
         Debug.debugKu(config.toString());
 
         // Create the Server
-        ServerSocket server = new ServerSocket(Integer.parseInt(config.getPort()), 5, InetAddress.getByName("127.0.0.1"));
+        ServerSocket server = new ServerSocket(Integer.parseInt(config.getPort()), 5, InetAddress.getByName(config.getIp()));
         Debug.debugKu("0");
         // Listen to any client request
         while (true){
@@ -58,6 +58,10 @@ public class WebServer {
                 msg = br .readLine();
                 fullMsg = fullMsg.concat(msg);
 
+                if(msg.contains("Host")){
+                    String host = msg.split(" ")[1];
+                    config.setDocRootByHost(configPath, host);
+                }
             }
 
             // Save request from client

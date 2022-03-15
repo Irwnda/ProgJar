@@ -10,34 +10,27 @@ public class Config {
     private String ip;
     private String docRoot;
 
-    public Config(String configPath) throws FileNotFoundException {
+    public Config(String configPath) {
         try {
-            FileReader fReader = new FileReader(new File(configPath));
+            FileReader fReader = new FileReader(configPath);
             BufferedReader bufReader = new BufferedReader(fReader);
 
             String line;
             line = bufReader.readLine();
             while (line != null) {
-                if(line.indexOf("Listen") != -1) {
-                    int idxOfPort = ("Listen ").length();
-                    String port = line.substring(idxOfPort);
+                if(line.contains("Listen")) {
+                    String port = line.split(" ")[1];
                     this.setPort(port);
                 }
 
-                if(line.indexOf("ServerName") != -1) {
-                    int idxOfIp = ("ServerName ").length();
-                    String ip = line.substring(idxOfIp);
+                if(line.contains("ServerName")) {
+                    String ip = line.split(" ")[1];
                     this.setIp(ip);
                 }
 
-                if(line.indexOf("DocumentRoot") != -1) {
-                    int idxOfDocRoot = ("DocumentRoot ").length();
-                    String docRoot = line.substring(idxOfDocRoot);
-
-                    docRoot = docRoot.substring(docRoot.indexOf("\"")+1);
-                    docRoot = docRoot.substring(0, docRoot.indexOf("\""));
-
-                    this.setDocRoot(docRoot);
+                if(line.contains("DocumentRoot")) {
+                    String[] conf = line.split(" ");
+                    this.setDocRoot(conf[1].substring(1,conf[1].length()-1));
                 }
 
                 line = bufReader.readLine();
@@ -71,6 +64,21 @@ public class Config {
 
     public void setDocRoot(String docRoot) {
         this.docRoot = docRoot;
+    }
+
+    public void setDocRootByHost(String configPath, String Host) throws IOException {
+        FileReader fReader = new FileReader(configPath);
+        BufferedReader bufReader = new BufferedReader(fReader);
+
+        String line;
+        line = bufReader.readLine();
+        while (line != null) {
+            if(line.contains(Host)){
+                String[] conf = line.split(" ");
+                setDocRoot(conf[1].substring(1,conf[1].length()-1));
+            }
+            line = bufReader.readLine();
+        }
     }
 
     @Override
