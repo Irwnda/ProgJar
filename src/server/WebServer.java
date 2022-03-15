@@ -3,6 +3,8 @@ package server;
 import utils.Debug;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -29,9 +31,8 @@ public class WebServer {
         Debug.debugKu(config.toString());
 
         // Create the Server
-        ServerSocket server = new ServerSocket(Integer.parseInt(config.getPort()), 5);
+        ServerSocket server = new ServerSocket(Integer.parseInt(config.getPort()), 5, InetAddress.getByName("127.0.0.1"));
         Debug.debugKu("0");
-
         // Listen to any client request
         while (true){
             Socket client = server.accept();
