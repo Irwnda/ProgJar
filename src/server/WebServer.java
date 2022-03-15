@@ -66,6 +66,7 @@ public class WebServer {
 
             // Save request from client
             Request req = new Request(fullMsg, config);
+            System.out.println(req.getFullReq());
             Debug.debugKu("2");
 
             // Create response for client

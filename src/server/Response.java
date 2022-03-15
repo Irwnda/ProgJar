@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Base64;
 
 public class Response {
     private String contentType = "";
@@ -24,15 +25,32 @@ public class Response {
     public void computeRes(Config cfg){
         // Set content body with file content by the requested urn
         try {
-            FileInputStream fipt = new FileInputStream(cfg.getDocRoot() + urn);
+            File file = new File(cfg.getDocRoot()+urn);
+            FileInputStream fipt = new FileInputStream(file);
             body = new String(fipt.readAllBytes());
             statusCode = "200 OK";
 
             // Determine the content type of requested urn
             String[] text = {"html", "php", "txt"};
+            String[] image = {"jpeg", "jpg", "png"};
             String ext = urn.split("\\.")[1];
 
             if(Arrays.asList(text).contains(ext)){
+                contentType = ("text/html");
+            }
+            else if(Arrays.asList(image).contains(ext)){
+                byte[] fileContent = Files.readAllBytes(file.toPath());
+                String content = Base64.getEncoder().encodeToString(fileContent);
+                body = String.format("""
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                        <title>%s</title>
+                        </head>
+                        <body>
+                            <img src='data:image/%s;base64,%s'>
+                        </body>
+                        </html>""", urn, ext, content);
                 contentType = ("text/html");
             }
             else{
