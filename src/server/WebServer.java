@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
 
 /**
  * DESCRIPTION :
@@ -66,7 +67,7 @@ public class WebServer {
 
             // Save request from client
             Request req = new Request(fullMsg, config);
-            System.out.println(req.getFullReq());
+            // System.out.println(req.getFullReq());
             Debug.debugKu("2");
 
             // Create response for client
@@ -79,8 +80,12 @@ public class WebServer {
             Debug.debugKu("4");
 
             // Close the connection
-            if(req.getConn() != "keep-alive")
+            if(!Objects.equals(req.getConn(), "keep-alive")){
                 client.close();
+                Debug.debugKu("Closing connection ...");
+            }else{
+                Debug.debugKu("Using keep-alive ...");
+            }
 
             Debug.debugKu("5");
 
