@@ -73,7 +73,7 @@ public class Config {
         String line;
         line = bufReader.readLine();
         while (line != null) {
-            if(line.contains(Host)){
+            if(line.contains(Host) || line.contains("DocumentRoot")){
                 String[] conf = line.split(" ");
                 setDocRoot(conf[1].substring(1,conf[1].length()-1));
             }
