@@ -5,12 +5,19 @@ import utils.Debug;
 public class Request {
     private String fullReq;
     private String urn;
+    private String conn;
 
     public Request(String fullReq, Config cfg) {
         this.fullReq = fullReq;
 
         String res[] = fullReq.split(" ");
         setUrn(res[1].substring(1));
+
+        int idxOfConn = fullReq.indexOf("Connection: ")+12;
+        int idxOfEndConn = fullReq.indexOf("\n", idxOfConn);
+
+        String conn = fullReq.substring(idxOfConn, idxOfEndConn);
+        this.conn = conn;
     }
 
     public String getFullReq() {
@@ -27,5 +34,9 @@ public class Request {
 
     public void setUrn(String urn) {
         this.urn = urn;
+    }
+
+    public String getConn() {
+        return conn;
     }
 }

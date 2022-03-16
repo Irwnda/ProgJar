@@ -56,7 +56,7 @@ public class WebServer {
 
             while( !msg.isEmpty() ){
                 msg = br .readLine();
-                fullMsg = fullMsg.concat(msg);
+                fullMsg = fullMsg.concat(msg+"\n");
 
                 if(msg.contains("Host")){
                     String host = msg.split(" ")[1];
@@ -79,7 +79,9 @@ public class WebServer {
             Debug.debugKu("4");
 
             // Close the connection
-            client.close();
+            if(req.getConn() != "keep-alive")
+                client.close();
+
             Debug.debugKu("5");
 
         }
