@@ -1,6 +1,6 @@
 package server;
 
-import utils.Debug;
+import utils.Dbg;
 
 public class Request {
     private String fullReq;
@@ -9,6 +9,8 @@ public class Request {
 
     public Request(String fullReq, Config cfg) {
         this.fullReq = fullReq;
+
+        // Dbg.debugKu(fullReq);
 
         String res[] = fullReq.split(" ");
         setUrn(res[1].substring(1));

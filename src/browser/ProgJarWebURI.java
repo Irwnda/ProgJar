@@ -1,6 +1,6 @@
 package browser;
 
-import utils.ConsoleColors;
+import utils.CColors;
 
 import java.io.*;
 import java.net.*;
@@ -13,7 +13,7 @@ public class ProgJarWebURI {
 
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
-        System.out.print(ConsoleColors.BLUE + "Enter valid URL\t: " + ConsoleColors.RESET);
+        System.out.print(CColors.BLUE + "Enter valid URL\t: " + CColors.RESET);
         String input = sc.nextLine();
         sc.close();
 
@@ -62,7 +62,7 @@ public class ProgJarWebURI {
             while( bis.read( headerByte ) != -1 ){
                 headerStr += new String( headerByte );
                 if( headerStr.indexOf("\r\n\r\n") != -1 ){
-                    System.out.println(ConsoleColors.GREEN + "####### Header Scan COMPLETED" + ConsoleColors.RESET);
+                    System.out.println(CColors.GREEN + "####### Header Scan COMPLETED" + CColors.RESET);
                     break;
                 }
 
@@ -84,8 +84,8 @@ public class ProgJarWebURI {
                          */
                         while (response.checkNewLocation()) {
                             System.out.println(
-                                    ConsoleColors.YELLOW + "####### Redirecting to : \n" + response.getNewLocation()
-                                            + ConsoleColors.RESET);
+                                    CColors.YELLOW + "####### Redirecting to : \n" + response.getNewLocation()
+                                            + CColors.RESET);
                             response = new Response(openURL(response.getNewLocation()));
                         }
 
@@ -103,7 +103,7 @@ public class ProgJarWebURI {
                             response.showLinks();
                         else
                             System.out.println(
-                                    ConsoleColors.RED + "####### Anchor tag NOT Found !" + ConsoleColors.RESET);
+                                    CColors.RED + "####### Anchor tag NOT Found !" + CColors.RESET);
 
                     } else {
                         downloadFile(userURL, headerStr);
@@ -126,7 +126,7 @@ public class ProgJarWebURI {
      * @throws IOException
      */
     public static String openURL(String URL) throws UnknownHostException, IOException {
-        System.out.println(ConsoleColors.GREEN + "####### Opening URL : " + URL + ConsoleColors.RESET);
+        System.out.println(CColors.GREEN + "####### Opening URL : " + URL + CColors.RESET);
 
         String[] inputURL;
         String protocol;
@@ -177,7 +177,7 @@ public class ProgJarWebURI {
      */
     public static void downloadFile(String link, String header) throws UnknownHostException, IOException {
         try {
-            System.out.println(ConsoleColors.GREEN + "####### Downloading from URL : " + link + ConsoleColors.RESET);
+            System.out.println(CColors.GREEN + "####### Downloading from URL : " + link + CColors.RESET);
 
             URL url = new URL(link);
             File out = new File("file2.pdf");

@@ -1,6 +1,6 @@
 package browser;
 
-import utils.ConsoleColors;
+import utils.CColors;
 
 import java.util.*;
 
@@ -112,7 +112,7 @@ public class Response {
      * Show text content of the response [ EXCLUDE HEADER ]
      */
     public void showTextResponse() {
-        System.out.println(ConsoleColors.YELLOW + "\n####### Response Text :" + ConsoleColors.RESET);
+        System.out.println(CColors.YELLOW + "\n####### Response Text :" + CColors.RESET);
 
         // String content = this.textResponse;
         // int idxOfContent = content.indexOf('<');
@@ -232,7 +232,7 @@ public class Response {
      * Show respective response's clickable link
      */
     public void showLinks() {
-        System.out.println(ConsoleColors.YELLOW + "\n####### Clickable links :" + ConsoleColors.RESET);
+        System.out.println(CColors.YELLOW + "\n####### Clickable links :" + CColors.RESET);
         if (this.linkURLs.size() == 0)
             System.out.println("1.\t-");
         else
@@ -252,19 +252,19 @@ public class Response {
         switch (firstCode) {
             case '4':
                 System.out.println(
-                        ConsoleColors.RED
+                        CColors.RED
                                 + "==|| MAAF, Anda melakukan kesalahan [Client Error] :p - Status : "
-                                + ConsoleColors.RED_BACKGROUND_BRIGHT + this.getCode() + ConsoleColors.RED
+                                + CColors.RED_BACKGROUND_BRIGHT + this.getCode() + CColors.RED
                                 + " ||=="
-                                + ConsoleColors.RESET);
+                                + CColors.RESET);
                 return true;
             case '5':
                 System.out.println(
-                        ConsoleColors.RED
+                        CColors.RED
                                 + "==|| MAAF, Server sedang tidur [Server Error] :( - Status : "
-                                + ConsoleColors.RED_BACKGROUND_BRIGHT + this.getCode() + ConsoleColors.RED
+                                + CColors.RED_BACKGROUND_BRIGHT + this.getCode() + CColors.RED
                                 + " ||=="
-                                + ConsoleColors.RESET);
+                                + CColors.RESET);
                 return true;
         }
         return false;

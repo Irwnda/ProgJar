@@ -1,7 +1,6 @@
 package server;
 
-import utils.ConsoleColors;
-import utils.Debug;
+import utils.CColors;
 
 import java.io.*;
 
@@ -10,7 +9,15 @@ public class Config {
     private String ip;
     private String docRoot;
 
+    public String getConfigPath() {
+        return configPath;
+    }
+
+    private String configPath;
+
     public Config(String configPath) {
+        this.configPath = configPath;
+
         try {
             FileReader fReader = new FileReader(configPath);
             BufferedReader bufReader = new BufferedReader(fReader);
@@ -36,9 +43,9 @@ public class Config {
                 line = bufReader.readLine();
             }
         } catch (FileNotFoundException e) {
-            System.out.println(ConsoleColors.RED + "File Not Found. Terminating..." + ConsoleColors.RESET);
+            System.out.println(CColors.RED + "File Not Found. Terminating..." + CColors.RESET);
         } catch (IOException e) {
-            System.out.println(ConsoleColors.RED + "IOException. Terminating..." + ConsoleColors.RESET);
+            System.out.println(CColors.RED + "IOException. Terminating..." + CColors.RESET);
         }
     }
 
