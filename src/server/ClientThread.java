@@ -7,8 +7,8 @@ import java.net.Socket;
 import java.util.Objects;
 
 public class ClientThread extends Thread{
-    private Socket client;
-    private Config config;
+    private final Socket client;
+    private final Config config;
 
     public ClientThread(Socket client, Config config) {
         this.client = client;
@@ -33,6 +33,7 @@ public class ClientThread extends Thread{
                 Thread.yield();
             }
 
+            assert msg != null;
             fullMsg = fullMsg.concat(msg);
 
             while (!msg.isEmpty()) {
@@ -47,11 +48,11 @@ public class ClientThread extends Thread{
 
             // Save request from client
             Request req = new Request(fullMsg, config);
-            // System.out.println(req.getFullReq());
+            String range = req.getRange();
             Dbg.debugKu("2");
 
             // Create response for client
-            Response res = new Response(req.getUrn(), config);
+            Response res = new Response(req.getUrn(), config, range);
             Dbg.debugKu("3");
 
             // Write the reply msg to server

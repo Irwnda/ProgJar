@@ -6,20 +6,25 @@ public class Request {
     private String fullReq;
     private String urn;
     private String conn;
+    private String range = "";
 
     public Request(String fullReq, Config cfg) {
         this.fullReq = fullReq;
 
         // Dbg.debugKu(fullReq);
 
-        String res[] = fullReq.split(" ");
+        String[] res = fullReq.split(" ");
         setUrn(res[1].substring(1));
 
         int idxOfConn = fullReq.indexOf("Connection: ")+12;
         int idxOfEndConn = fullReq.indexOf("\n", idxOfConn);
 
-        String conn = fullReq.substring(idxOfConn, idxOfEndConn);
-        this.conn = conn;
+        this.conn = fullReq.substring(idxOfConn, idxOfEndConn);
+
+        int idxOfRange = fullReq.indexOf("Range: ")+7;
+        int idxOfEndRange = fullReq.indexOf("\n", idxOfConn);
+
+        this.range = fullReq.substring(idxOfRange, idxOfEndRange);
     }
 
     public String getFullReq() {
@@ -41,4 +46,6 @@ public class Request {
     public String getConn() {
         return conn;
     }
+
+    public String getRange(){ return range; }
 }

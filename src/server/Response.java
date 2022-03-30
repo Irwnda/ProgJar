@@ -1,5 +1,7 @@
 package server;
 
+import utils.Dbg;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,24 +17,40 @@ public class Response {
     private String fullRes = "";
     private String statusCode = "";
     private final String urn;
+    private String range = "";
 
-    public Response(String urn, Config cfg) {
+    public Response(String urn, Config cfg, String range) {
         this.urn = urn;
-        computeRes(cfg);
+        computeRes(cfg, range);
 
     }
 
-    public void computeRes(Config cfg){
+    public void computeRes(Config cfg, String range){
         // Set content body with file content by the requested urn
         try {
             File file = new File(cfg.getDocRoot()+urn);
             FileInputStream fipt = new FileInputStream(file);
-            body = new String(fipt.readAllBytes());
-            statusCode = "200 OK";
+
+            if(!range.equals("")){
+                int startRangeIdx = range.indexOf('=')+1;
+                int endRangeIdx = range.indexOf('-');
+
+                int startRange = Integer.parseInt(range.substring(startRangeIdx, endRangeIdx));
+                int endRange = Integer.parseInt(range.substring(endRangeIdx+1));
+
+                body = String.valueOf(fipt.read(new byte[1024], startRange, endRange-startRange));
+                statusCode = "206 Partial Content";
+                this.range = "Content-Range: bytes "+startRange+"-"+endRange+"/*";
+            }
+            else {
+                body = new String(fipt.readAllBytes());
+                statusCode = "200 OK";
+            }
 
             // Determine the content type of requested urn
             String[] text = {"html", "php", "txt"};
             String[] image = {"jpeg", "jpg", "png"};
+            String[] application = {"json", "pdf", "rtf", "zip"};
             String ext = urn.split("\\.")[1];
 
             if(Arrays.asList(text).contains(ext)){
@@ -53,8 +71,8 @@ public class Response {
                         </html>""", urn, ext, content);
                 contentType = ("text/html");
             }
-            else{
-                contentType = ("application/pdf");
+            else if(Arrays.asList(application).contains(ext)){
+                contentType = ("application/"+ext);
             }
         }
         catch (FileNotFoundException e){
@@ -99,6 +117,9 @@ public class Response {
         fullRes = fullRes.concat("HTTP/1.0 " + getStatusCode() + "\r\n");
         fullRes = fullRes.concat("Content-Type: " + getContentType() + "\r\n");
         fullRes = fullRes.concat("Content-length: " + getBody().length() + "\r\n");
+        if(!range.equals("")){
+            fullRes = fullRes.concat(range);
+        }
         fullRes = fullRes.concat("\r\n\r\n");
         fullRes = fullRes.concat(getBody());
 
