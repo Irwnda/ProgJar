@@ -21,10 +21,12 @@ public class Request {
 
         this.conn = fullReq.substring(idxOfConn, idxOfEndConn);
 
-        int idxOfRange = fullReq.indexOf("Range: ")+7;
-        int idxOfEndRange = fullReq.indexOf("\n", idxOfConn);
+        if(fullReq.contains("Range: ")) {
+            int idxOfRange = fullReq.indexOf("Range: ") + 7;
+            int idxOfEndRange = fullReq.indexOf("\n", idxOfConn);
 
-        this.range = fullReq.substring(idxOfRange, idxOfEndRange);
+            this.range = fullReq.substring(idxOfRange, idxOfEndRange);
+        }
     }
 
     public String getFullReq() {
