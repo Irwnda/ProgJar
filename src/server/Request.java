@@ -2,6 +2,8 @@ package server;
 
 import utils.Dbg;
 
+import java.util.Locale;
+
 public class Request {
     private String fullReq;
     private String urn;
@@ -20,6 +22,7 @@ public class Request {
         int idxOfEndConn = fullReq.indexOf("\n", idxOfConn);
 
         this.conn = fullReq.substring(idxOfConn, idxOfEndConn);
+        this.conn = this.conn.toLowerCase();
 
         int idxOfRange = fullReq.indexOf("Range: ")+7;
         int idxOfEndRange = fullReq.indexOf("\n", idxOfConn);
