@@ -1,49 +1,136 @@
 package chat.gui;
 
 import chat.client.Client;
+import utils.Palette;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ClientGUI {
+    public JPanel mainPanel;
+    private JPanel leftPanel;
+    private JPanel rightPanel;
     private Client client;
+    private JPanel topPanel, bottomPanel, midPanel;
 
-    public ClientGUI(Client client) {
+    private JTextArea textArea;
+    private JButton btnSend;
+    private JButton btnDc;
+    private JPanel btnPanel;
+    private JPanel chatPanel;
+    private JPanel statusBar;
+    private JLabel status;
+
+    private JFrame frame;
+
+    public ClientGUI(Client client){
         this.client = client;
 
-        JFrame frame = new JFrame();
-        frame.setMinimumSize(new Dimension(600, 1080));
+        frame = new JFrame();
+        frame.setMinimumSize(new Dimension(300, 768));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        String title = "Not Set";
-        if(client.getUserName() != "")
-            title = client.getUserName();
-        frame.setTitle("Group Chat : ["+title+"]");
+        frame.setBackground(Color.BLACK);
 
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(40,40,40,40));
+        frame.setTitle("ngeChat | Socket Chat App");
 
-        JTextArea textArea = new JTextArea("Enter your Messages Here", 5,40);
-        textArea.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        createUIComponents();
+        frame.setContentPane(mainPanel);
 
-        JButton btnSend = new JButton("Send");
-        JButton btnDc = new JButton("Disconnect");
-        if(client.getUserName() == ""){
-            btnDc.setText("Login");
-        }
-
-        JPanel btnPanel = new JPanel();
-        btnPanel.setLayout(new BoxLayout(btnPanel, BoxLayout.PAGE_AXIS));
-        btnPanel.add(btnSend);
-        btnPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        btnPanel.add(btnDc);
-
-        panel.add(textArea);
-        panel.add(btnPanel);
-
-        frame.add(panel, BorderLayout.PAGE_END);
         frame.pack();
         frame.setLayout(null);
         frame.setVisible(true);
+        frame.setResizable(false);
+
+    }
+
+    private void createUIComponents() {
+        textArea.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+        status.setText("Disconnected");
+        status.setForeground(Color.RED);
+
+        createHomePanel();
+        createBottomPanel();
+
+    }
+
+
+    private void createHomePanel() {
+        chatPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        chatPanel.setLayout(new BoxLayout(chatPanel, BoxLayout.Y_AXIS));
+
+        JLabel welcomeLabel = new JLabel("Welcome to ngeChat");
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel continueLabel = new JLabel("Enter Username to Continue !");
+        continueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JTextField textField = new JTextField();
+        textField.setPreferredSize( new Dimension( 200, 24 ) );
+        JButton loginBtn = new JButton("Login!");
+        loginBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userName = textField.getText();
+                doLogin(userName);
+            }
+        });
+
+        JPanel loginPanel = new JPanel();
+        loginPanel.setBackground(Palette.BIRUMUDA);
+        loginPanel.setLayout(new FlowLayout());
+        loginPanel.add(textField);
+        loginPanel.add(loginBtn);
+
+        chatPanel.add(Box.createRigidArea(new Dimension(1, 300)));
+        chatPanel.add(welcomeLabel);
+        chatPanel.add(Box.createRigidArea(new Dimension(1, 10)));
+        chatPanel.add(continueLabel);
+        chatPanel.add(loginPanel);
+    }
+
+    private void createBottomPanel() {
+        setBottomEnable(false);
+
+        btnDc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                doDisconnect();
+            }
+        });
+    }
+
+    public void doLogin(String userName) {
+        client.setUserName(userName);
+
+        status.setText("Connected : " + client.getUserName());
+        status.setForeground(Color.BLUE);
+
+        setBottomEnable(true);
+
+        chatPanel.removeAll();
+        chatPanel.revalidate();
+        chatPanel.repaint();
+    }
+
+    public void doDisconnect() {
+        client.setUserName("");
+
+        status.setText("Disconnected");
+        status.setForeground(Color.RED);
+
+        setBottomEnable(false);
+
+        createHomePanel();
+        chatPanel.revalidate();
+        chatPanel.repaint();
+    }
+
+    public void setBottomEnable(Boolean isEnable) {
+            textArea.setEnabled(isEnable);
+            btnSend.setEnabled(isEnable);
+            btnDc.setEnabled(isEnable);
     }
 }

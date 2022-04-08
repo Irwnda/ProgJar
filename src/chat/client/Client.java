@@ -19,6 +19,8 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        new Client("");
+        Client client1 = new Client("");
+
+        Client client2 = new Client("Erik");
     }
 }
