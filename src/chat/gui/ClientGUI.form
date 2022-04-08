@@ -7,8 +7,8 @@
     <properties>
       <background color="-1966074"/>
       <foreground color="-1247749"/>
-      <minimumSize width="550" height="768"/>
-      <preferredSize width="550" height="768"/>
+      <minimumSize width="550" height="720"/>
+      <preferredSize width="550" height="720"/>
     </properties>
     <border type="none"/>
     <children>
@@ -17,8 +17,8 @@
         <constraints border-constraint="West"/>
         <properties>
           <background color="-1247749"/>
-          <minimumSize width="10" height="768"/>
-          <preferredSize width="150" height="768"/>
+          <minimumSize width="10" height="720"/>
+          <preferredSize width="150" height="720"/>
         </properties>
         <border type="none"/>
         <children/>
@@ -31,7 +31,7 @@
           <foreground color="-13127710"/>
           <inheritsPopupMenu value="false"/>
           <minimumSize width="0" height="0"/>
-          <preferredSize width="400" height="768"/>
+          <preferredSize width="400" height="720"/>
         </properties>
         <border type="none"/>
         <children>

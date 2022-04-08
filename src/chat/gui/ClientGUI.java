@@ -29,7 +29,7 @@ public class ClientGUI {
         this.client = client;
 
         frame = new JFrame();
-        frame.setMinimumSize(new Dimension(300, 768));
+        frame.setMinimumSize(new Dimension(300, 720));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBackground(Color.BLACK);
 
@@ -70,12 +70,9 @@ public class ClientGUI {
         JTextField textField = new JTextField();
         textField.setPreferredSize( new Dimension( 200, 24 ) );
         JButton loginBtn = new JButton("Login!");
-        loginBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String userName = textField.getText();
-                doLogin(userName);
-            }
+        loginBtn.addActionListener(e -> {
+            String userName = textField.getText();
+            doLogin(userName);
         });
 
         JPanel loginPanel = new JPanel();
@@ -94,12 +91,8 @@ public class ClientGUI {
     private void createBottomPanel() {
         setBottomEnable(false);
 
-        btnDc.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doDisconnect();
-            }
-        });
+        btnSend.addActionListener(e -> client.sendMessage(textArea.getText()));
+        btnDc.addActionListener(e -> doDisconnect());
     }
 
     public void doLogin(String userName) {
