@@ -2,9 +2,7 @@ package chat.server;
 
 import chat.object.Message;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class WorkerThread extends Thread {
@@ -27,7 +25,12 @@ public class WorkerThread extends Thread {
             try {
                 Message message = (Message) this.ois.readObject();
 
-                this.serverThread.sendToAll(message);
+                switch (message.getAction()) {
+                    case 1 -> serverThread.addClient(message.getSender());
+                    case 0 -> serverThread.sendToAll(message);
+                    case -1 -> serverThread.removeClient(message.getSender());
+                }
+
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

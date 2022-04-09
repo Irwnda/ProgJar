@@ -97,6 +97,7 @@ public class ClientGUI {
 
     public void doLogin(String userName) {
         client.setUserName(userName);
+        client.registerClient(userName);
 
         status.setText("Connected : " + client.getUserName());
         status.setForeground(Color.BLUE);
@@ -109,6 +110,7 @@ public class ClientGUI {
     }
 
     public void doDisconnect() {
+        client.disconnectClient(client.getUserName());
         client.setUserName("");
 
         status.setText("Disconnected");

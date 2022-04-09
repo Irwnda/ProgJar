@@ -1,15 +1,18 @@
 package chat.server;
 
 import chat.object.Message;
+import utils.Dbg;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class ServerThread extends Thread {
     private Hashtable<String, WorkerThread> clientList;
+    private ArrayList<String> Clients = new ArrayList<>();
     private ServerSocket server;
 
     public ServerThread() {
@@ -39,9 +42,34 @@ public class ServerThread extends Thread {
 
                 this.clientList.put(clientId, wt);
             } catch (IOException e) {
-                e.printStackTrace();
+                closeServerSocket();
             }
         }
+    }
+
+    public void closeServerSocket(){
+        try{
+            if(this.server != null){
+                this.server.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addClient(String userName){
+        this.Clients.add(userName);
+        Dbg.debugKu("Connected Client:");
+        for(int i = 0; i<Clients.size(); i++)
+            System.out.println(Clients.get(i));
+    }
+
+    public void removeClient(String userName){
+        this.Clients.remove(userName);
+    }
+
+    public ArrayList<String> getClients(){
+        return this.Clients;
     }
 
     public void sendToAll(Message message) {
@@ -53,11 +81,8 @@ public class ServerThread extends Thread {
 
             WorkerThread wt = this.clientList.get(clientId);
 
-
-
             // send the message
             wt.send(message);
         }
-
     }
 }

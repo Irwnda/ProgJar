@@ -29,6 +29,7 @@ public class Client {
             Message message = new Message();
             message.setSender(this.userName);
             message.setText(text);
+            message.setAction(0);
 
             this.ous.writeObject(message);
             this.ous.flush();
@@ -36,6 +37,32 @@ public class Client {
             e.printStackTrace();
         }
 
+    }
+
+    public void registerClient(String userName){
+        try {
+            Message person = new Message();
+            person.setSender(userName);
+            person.setText("");
+            person.setAction(1);
+            this.ous.writeObject(person);
+            this.ous.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void disconnectClient(String userName){
+        try {
+            Message person = new Message();
+            person.setSender(userName);
+            person.setText("");
+            person.setAction(-1);
+            this.ous.writeObject(person);
+            this.ous.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getUserName() {
