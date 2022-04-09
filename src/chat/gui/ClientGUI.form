@@ -12,8 +12,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="bfa3a" binding="leftPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+      <grid id="bfa3a" binding="leftPanel" layout-manager="GridBagLayout">
         <constraints border-constraint="West"/>
         <properties>
           <background color="-1247749"/>
@@ -110,7 +109,7 @@
               </hspacer>
             </children>
           </grid>
-          <grid id="eb973" binding="chatPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="eb973" binding="chatPanel" layout-manager="GridBagLayout">
             <constraints border-constraint="Center"/>
             <properties>
               <background color="-13127710"/>

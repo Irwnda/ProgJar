@@ -3,10 +3,16 @@ package chat.gui;
 import chat.client.Client;
 import utils.Palette;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+
+import static java.awt.Image.SCALE_SMOOTH;
 
 public class ClientGUI {
     public JPanel mainPanel;
@@ -52,6 +58,7 @@ public class ClientGUI {
         status.setForeground(Color.RED);
 
         createHomePanel();
+        createLeftPanel();
         createBottomPanel();
 
     }
@@ -86,6 +93,34 @@ public class ClientGUI {
         chatPanel.add(Box.createRigidArea(new Dimension(1, 10)));
         chatPanel.add(continueLabel);
         chatPanel.add(loginPanel);
+    }
+
+    private void createLeftPanel() {
+        String path = "https://avatars.dicebear.com/api/initials/erik.png";
+        try {
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+            gbc.insets = new Insets(5,5,5,5);
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+
+            JLabel Name = new JLabel("Global");
+            Image globalIcon = ImageIO.read(new URL("https://cdn-icons-png.flaticon.com/512/1383/1383676.png"));
+            Name.setIcon(new ImageIcon(globalIcon.getScaledInstance(15, 15, SCALE_SMOOTH)));
+            leftPanel.add(Name, gbc);
+
+            URL url = new URL(path);
+            Image myPicture = ImageIO.read(url);
+            JLabel onlineClient = new JLabel("Erik");
+            onlineClient.setAlignmentX(Component.LEFT_ALIGNMENT);
+            onlineClient.setIcon(new ImageIcon(myPicture.getScaledInstance(15, 15, SCALE_SMOOTH)));
+
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            leftPanel.add(onlineClient, gbc);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void createBottomPanel() {

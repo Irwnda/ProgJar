@@ -1,6 +1,6 @@
 package chat.server;
 
-import chat.object.Message;
+import chat.object.Object;
 
 import java.io.*;
 import java.net.Socket;
@@ -23,23 +23,28 @@ public class WorkerThread extends Thread {
     public void run() {
         while(true) {
             try {
-                Message message = (Message) this.ois.readObject();
-
-                switch (message.getAction()) {
-                    case 1 -> serverThread.addClient(message.getSender());
-                    case 0 -> serverThread.sendToAll(message);
-                    case -1 -> serverThread.removeClient(message.getSender());
+                Object message = (Object) this.ois.readObject();
+                if(message.getType().equals("Message")){
+                    serverThread.sendToAll(message);
                 }
-
+                else if(message.getType().equals("Client")){
+                    if(message.getAction()==1){
+                        serverThread.addClient(message.getSender());
+                    }
+                    else{
+                        serverThread.removeClient(message.getSender());
+                    }
+                    serverThread.updateConnectedClient();
+                }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void send(Message message) {
+    public void send(Object obj) {
         try {
-            this.ous.writeObject(message);
+            this.ous.writeObject(obj);
             this.ous.flush();
         } catch (IOException e) {
             e.printStackTrace();

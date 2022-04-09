@@ -1,6 +1,6 @@
 package chat.server;
 
-import chat.object.Message;
+import chat.object.Object;
 import utils.Dbg;
 
 import java.io.IOException;
@@ -72,10 +72,9 @@ public class ServerThread extends Thread {
         return this.Clients;
     }
 
-    public void sendToAll(Message message) {
+    public void sendToAll(Object message) {
         // iterate through all clients
         Enumeration<String> clientKeys = this.clientList.keys();
-        System.out.println(message.getSender());
         while (clientKeys.hasMoreElements()) {
             String clientId = clientKeys.nextElement();
 
@@ -83,6 +82,22 @@ public class ServerThread extends Thread {
 
             // send the message
             wt.send(message);
+        }
+    }
+
+    public void updateConnectedClient(){
+        Enumeration<String> clientKeys = this.clientList.keys();
+        Object obj = new Object();
+        obj.setClients(Clients);
+        System.out.println("Client list: " + obj.getClients());
+        obj.setType("ClientList");
+        while (clientKeys.hasMoreElements()) {
+            String clientId = clientKeys.nextElement();
+
+            WorkerThread wt = this.clientList.get(clientId);
+
+            // send the object
+            wt.send(obj);
         }
     }
 }
