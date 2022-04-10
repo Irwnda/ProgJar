@@ -19,12 +19,13 @@ public class WorkerThread extends Thread {
         while(true) {
             try {
                 Object obj = (Object) ois.readObject();
+
                 if(obj.getType().equals("Message")){
                     System.out.println(obj.getSender() + ": " + obj.getText());
                 }
-                else if(obj.getType().equals("ClientList")){
+                else if(obj.getType().equals("Client")){
                     System.out.println(obj.getClients());
-                    this.client.setClients(obj.getClients());
+                    client.setClients(obj.getClients());
                 }
 
             } catch (IOException | ClassNotFoundException e) {

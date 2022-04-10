@@ -8,13 +8,13 @@ import java.net.Socket;
 public class WorkerThread extends Thread {
     private ObjectOutputStream ous;
     private ObjectInputStream ois;
-    private ServerThread serverThread;
+    private Server server;
 
-    public WorkerThread(Socket socket, ServerThread serverThread) {
+    public WorkerThread(Socket socket, Server server) {
         try {
             this.ous = new ObjectOutputStream(socket.getOutputStream());
             this.ois = new ObjectInputStream(socket.getInputStream());
-            this.serverThread = serverThread;
+            this.server = server;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -23,18 +23,19 @@ public class WorkerThread extends Thread {
     public void run() {
         while(true) {
             try {
-                Object message = (Object) this.ois.readObject();
-                if(message.getType().equals("Message")){
-                    serverThread.sendToAll(message);
+                Object obj = (Object) this.ois.readObject();
+
+                if(obj.getType().equals("Message")){
+                    server.sendToAll(obj);
                 }
-                else if(message.getType().equals("Client")){
-                    if(message.getAction()==1){
-                        serverThread.addClient(message.getSender());
+                else if(obj.getType().equals("Client")){
+                    if(obj.getAction()==1){
+                        server.addClient(obj.getSender());
                     }
                     else{
-                        serverThread.removeClient(message.getSender());
+                        server.removeClient(obj.getSender());
                     }
-                    serverThread.updateConnectedClient();
+                    server.updateConnectedClient();
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();

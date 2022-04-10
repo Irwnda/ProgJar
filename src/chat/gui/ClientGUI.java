@@ -52,9 +52,7 @@ public class ClientGUI {
     }
 
     private void createUIComponents() {
-        textArea.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-
-        status.setText("Disconnected");
+       status.setText("Disconnected");
         status.setForeground(Color.RED);
 
         createHomePanel();
@@ -126,6 +124,8 @@ public class ClientGUI {
     private void createBottomPanel() {
         setBottomEnable(false);
 
+        textArea.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
         btnSend.addActionListener(e -> client.sendMessage(textArea.getText()));
         btnDc.addActionListener(e -> doDisconnect());
     }
@@ -159,8 +159,8 @@ public class ClientGUI {
     }
 
     public void setBottomEnable(Boolean isEnable) {
-            textArea.setEnabled(isEnable);
-            btnSend.setEnabled(isEnable);
-            btnDc.setEnabled(isEnable);
+        textArea.setEnabled(isEnable);
+        btnSend.setEnabled(isEnable);
+        btnDc.setEnabled(isEnable);
     }
 }

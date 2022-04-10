@@ -11,7 +11,7 @@ public class Object implements Serializable {
     private String text;
     private int action;
     private ArrayList<String> clients;
-    private String type;
+    private String type;    // 'Message' or 'Client'
 
     public String getSender() {
         return sender;
