@@ -29,6 +29,9 @@ public class WorkerThread extends Thread {
                 else if(obj.getType().equals("Client")){
                     System.out.println(obj.getClients());
                     client.setClients(obj.getClients());
+
+                    if(obj.getAction()==0)
+                        client.updateClientListUI();
                 }
 
             } catch (IOException | ClassNotFoundException e) {

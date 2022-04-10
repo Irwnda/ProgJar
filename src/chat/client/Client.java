@@ -13,10 +13,11 @@ public class Client {
     private String userName;
     private ObjectOutputStream ous;
     private static ArrayList<String> clients = new ArrayList<>();
-    Socket socket;
+    private Socket socket;
+    private ClientGUI clientGUI;
 
     public Client() {
-         ClientGUI clientGUI = new ClientGUI(this);
+         clientGUI = new ClientGUI(this);
 
         try {
             socket = new Socket("127.0.0.1", 9000);
@@ -117,5 +118,9 @@ public class Client {
 
     public static void main(String[] args) {
         Client clientRunner = new Client();
+    }
+
+    public void updateClientListUI() {
+        clientGUI.updateClientList();
     }
 }
