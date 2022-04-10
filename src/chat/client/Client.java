@@ -45,8 +45,26 @@ public class Client {
         }
     }
 
+    public void requestClientList(){
+        try {
+            Object reqObj = new Object();
+            reqObj.setType("Client");
+            reqObj.setAction(0);
+
+            this.ous.writeObject(reqObj);
+            this.ous.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void registerClient(String userName){
         try {
+            requestClientList();
+
+//            clients.add(userName);
+            // RAWAN TELATTT
+            Thread.sleep(2000);
             clients.add(userName);
 
             Object personObj = new Object();
@@ -58,6 +76,8 @@ public class Client {
             this.ous.writeObject(personObj);
             this.ous.flush();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

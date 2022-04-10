@@ -1,6 +1,8 @@
 package chat.server;
 
 import chat.object.Object;
+import utils.CColors;
+import utils.Dbg;
 
 import java.io.*;
 import java.net.Socket;
@@ -30,15 +32,23 @@ public class WorkerThread extends Thread {
                 }
                 else if(obj.getType().equals("Client")){
                     if(obj.getAction()==1){
-                        server.addClient(obj.getSender());
+                        // add Client
+                        server.setClients(obj.getClients());
                     }
-                    else{
-                        server.removeClient(obj.getSender());
+                    else if (obj.getAction()==0){
+                        // Request list client
+                        Object objClientList = new Object();
+                        objClientList.setType("Client");
+                        objClientList.setAction(0);
+                        objClientList.setClients(server.getClients());
+                        send(objClientList);
                     }
                     server.updateConnectedClient();
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                Dbg.debugKu(CColors.RED + "Server Terminated" + CColors.RESET);
+                System.exit(0);
+                // e.printStackTrace();
             }
         }
     }

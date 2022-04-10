@@ -46,4 +46,15 @@ public class Object implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "Object{" +
+                "sender='" + sender + '\'' +
+                ", text='" + text + '\'' +
+                ", action=" + action +
+                ", clients=" + clients +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

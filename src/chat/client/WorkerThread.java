@@ -1,6 +1,7 @@
 package chat.client;
 
 import chat.object.Object;
+import utils.CColors;
 import utils.Dbg;
 
 import java.io.IOException;
@@ -20,6 +21,8 @@ public class WorkerThread extends Thread {
             try {
                 Object obj = (Object) ois.readObject();
 
+                Dbg.debugKu(obj.toString());
+
                 if(obj.getType().equals("Message")){
                     System.out.println(obj.getSender() + ": " + obj.getText());
                 }
@@ -29,7 +32,9 @@ public class WorkerThread extends Thread {
                 }
 
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                Dbg.debugKu(CColors.RED + "Client Terminated" + CColors.RESET);
+                System.exit(0);
+                // e.printStackTrace();
             }
 
         }

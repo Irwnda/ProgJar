@@ -58,10 +58,6 @@ public class Server {
 
     public void addClient(String userName){
         clients.add(userName);
-        Dbg.debugKu("Connected Client :");
-
-        for(int i = 0; i< clients.size(); i++)
-            System.out.println((i+1)+ ". " + clients.get(i));
     }
 
     public void removeClient(String userName){
@@ -72,33 +68,29 @@ public class Server {
         return clients;
     }
 
-    public void sendToAll(Object message) {
-        // iterate through all clients
+    public void setClients(ArrayList<String> clients) {
+        this.clients = clients;
+    }
+
+    public void sendToAll(Object obj) {
         Enumeration<String> clientKeys = clientList.keys();
+
         while (clientKeys.hasMoreElements()) {
             String clientId = clientKeys.nextElement();
 
             WorkerThread wt = clientList.get(clientId);
-
-            // send the message
-            wt.send(message);
+            wt.send(obj);
         }
     }
 
     public void updateConnectedClient(){
-        Enumeration<String> clientKeys = clientList.keys();
         Object obj = new Object();
         obj.setClients(clients);
+        obj.setType("Client");
+        sendToAll(obj);
+
         System.out.println("Client list: " + obj.getClients());
-        obj.setType("ClientList");
-        while (clientKeys.hasMoreElements()) {
-            String clientId = clientKeys.nextElement();
 
-            WorkerThread wt = clientList.get(clientId);
-
-            // send the object
-            wt.send(obj);
-        }
     }
 
     public static void main(String[] args) {
