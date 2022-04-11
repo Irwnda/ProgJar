@@ -83,6 +83,12 @@ public class Server {
         }
     }
 
+    public void sendToAClient(Object obj, String clientId) {
+        WorkerThread wt = clientList.get(clientId);
+        wt.send(obj);
+
+    }
+
     public void updateConnectedClient(){
         Object obj = new Object();
         obj.setClients(clients);
@@ -96,4 +102,5 @@ public class Server {
     public static void main(String[] args) {
         Server serverRunner = new Server();
     }
+
 }

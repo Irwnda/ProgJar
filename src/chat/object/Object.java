@@ -8,6 +8,7 @@ public class Object implements Serializable {
         CLIENT, CLIENTLIST, MESSAGE
     }
     private String sender;
+    private String receiver;
     private String text;
     private int action;
     private ArrayList<String> clients;
@@ -45,6 +46,14 @@ public class Object implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     @Override

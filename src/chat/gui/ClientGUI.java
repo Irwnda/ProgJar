@@ -9,8 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +38,7 @@ public class ClientGUI {
     private JPanel chatPanel;
     private JPanel statusBar;
     private JLabel status;
+    private JPanel headerPanel;
 
     private JFrame frame;
 
@@ -60,7 +64,7 @@ public class ClientGUI {
     }
 
     private void createUIComponents() {
-       status.setText("Disconnected");
+        status.setText("Disconnected");
         status.setForeground(Color.RED);
 
         createHomePanel();
@@ -69,8 +73,52 @@ public class ClientGUI {
 
     }
 
+    public void updateHeaderPanel() {
+        headerPanel.removeAll();
+
+        JLabel targetLabel = new JLabel(client.getTargetSend());
+        URL url = null;
+        try {
+            if(client.getTargetSend().equals("global"))
+                url = new URL("https://cdn-icons-png.flaticon.com/512/1383/1383676.png");
+            else
+                url = new URL("https://avatars.dicebear.com/api/initials/"+client.getTargetSend()+".png");
+
+            Image myPicture = ImageIO.read(url);
+            targetLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            targetLabel.setIcon(new ImageIcon(myPicture.getScaledInstance(40, 40, SCALE_SMOOTH)));
+            headerPanel.add(targetLabel, BorderLayout.BEFORE_LINE_BEGINS);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        headerPanel.revalidate();
+        headerPanel.repaint();
+    }
+
+    private void createChatPanel() {
+        chatPanel.removeAll();
+
+        headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        headerPanel.setMaximumSize(new Dimension(chatPanel.getWidth(), 50));
+        headerPanel.setBackground(Palette.ABU);
+
+        updateHeaderPanel();
+
+        JScrollPane scroller = new JScrollPane();
+
+        chatPanel.add(headerPanel);
+        chatPanel.add(scroller);
+
+        chatPanel.revalidate();
+        chatPanel.repaint();
+    }
 
     private void createHomePanel() {
+        chatPanel.removeAll();
         chatPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         chatPanel.setLayout(new BoxLayout(chatPanel, BoxLayout.Y_AXIS));
 
@@ -99,6 +147,7 @@ public class ClientGUI {
         chatPanel.add(Box.createRigidArea(new Dimension(1, 10)));
         chatPanel.add(continueLabel);
         chatPanel.add(loginPanel);
+
     }
 
     private void createLeftPanel() {
@@ -123,9 +172,7 @@ public class ClientGUI {
 
         setBottomEnable(true);
 
-        chatPanel.removeAll();
-        chatPanel.revalidate();
-        chatPanel.repaint();
+        createChatPanel();
     }
 
     public void doDisconnect() {
@@ -161,24 +208,37 @@ public class ClientGUI {
             gbc.gridx = 0;
             gbc.gridy = 0;
 
-            JLabel nameLabel = new JLabel("Global");
+            JLabel globalLabel = new JLabel("Global");
             Image globalIcon = ImageIO.read(new URL("https://cdn-icons-png.flaticon.com/512/1383/1383676.png"));
-            nameLabel.setIcon(new ImageIcon(globalIcon.getScaledInstance(20, 20, SCALE_SMOOTH)));
-            leftPanel.add(nameLabel, gbc);
+            globalLabel.setIcon(new ImageIcon(globalIcon.getScaledInstance(20, 20, SCALE_SMOOTH)));
+            globalLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    client.setTargetSend("global");
+                    updateHeaderPanel();
+                }
+            });
+            leftPanel.add(globalLabel, gbc);
 
             for (int i = 0; i < clientList.size(); i++) {
                 String uname = clientList.get(i);
                 URL url = new URL("https://avatars.dicebear.com/api/initials/"+uname+".png");
                 Image myPicture = ImageIO.read(url);
 
-                JLabel onlineClient = new JLabel(uname);
-                onlineClient.setAlignmentX(Component.LEFT_ALIGNMENT);
-                onlineClient.setIcon(new ImageIcon(myPicture.getScaledInstance(20, 20, SCALE_SMOOTH)));
+                JLabel clientLabel = new JLabel(uname);
+                clientLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                clientLabel.setIcon(new ImageIcon(myPicture.getScaledInstance(20, 20, SCALE_SMOOTH)));
+                clientLabel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        client.setTargetSend(uname);
+                        updateHeaderPanel();
+                    }
+                });
 
                 gbc.gridx = 0;
                 gbc.gridy = i+1;
-                leftPanel.add(onlineClient, gbc);
-                Dbg.debugKu("Client Image added !!!");
+                leftPanel.add(clientLabel, gbc);
             }
 
             leftPanel.revalidate();

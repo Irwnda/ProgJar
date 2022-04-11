@@ -15,6 +15,7 @@ public class Client {
     private static ArrayList<String> clients = new ArrayList<>();
     private Socket socket;
     private ClientGUI clientGUI;
+    private String targetSend = "global";
 
     public Client() {
          clientGUI = new ClientGUI(this);
@@ -35,12 +36,14 @@ public class Client {
     public void sendMessage(String text){
         try {
             Object msgObj = new Object();
-            msgObj.setSender(this.userName);
+            msgObj.setSender(userName);
+            msgObj.setReceiver(targetSend);
             msgObj.setType("Message");
             msgObj.setText(text);
 
             this.ous.writeObject(msgObj);
             this.ous.flush();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,6 +117,14 @@ public class Client {
 
     public void setClients(ArrayList<String> clients) {
         Client.clients = clients;
+    }
+
+    public String getTargetSend() {
+        return targetSend;
+    }
+
+    public void setTargetSend(String targetSend) {
+        this.targetSend = targetSend;
     }
 
     public static void main(String[] args) {
