@@ -22,6 +22,7 @@ import static java.awt.Image.SCALE_SMOOTH;
 
 public class ClientGUI {
     // Data
+    String[] avatarsType = {"male", "female", "human", "identicon", "initials", "bottts", "avataaars", "jdenticon", "gridy", "micah"};
     private ArrayList<String> clientList;
 
     // Component
@@ -128,10 +129,30 @@ public class ClientGUI {
         JLabel continueLabel = new JLabel("Enter Username to Continue !");
         continueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        JPanel avatarPanel = new JPanel(new FlowLayout());
+        avatarPanel.setBackground(Palette.BIRUMUDA);
+        JLabel avatarLabel = new JLabel("Avatar:");
+        JRadioButton[] avatarButton = new JRadioButton[10];
+        ButtonGroup avatarBtnGroup = new ButtonGroup();
+        avatarPanel.add(avatarLabel);
+        for(int i=0; i<avatarsType.length; i++){
+            avatarButton[i] = new JRadioButton();
+            avatarButton[i].setText(avatarsType[i]);
+            avatarButton[i].setBackground(Palette.BIRUMUDA);
+            avatarBtnGroup.add(avatarButton[i]);
+            avatarPanel.add(avatarButton[i]);
+        }
+
         JTextField textField = new JTextField();
         textField.setPreferredSize( new Dimension( 200, 24 ) );
         JButton loginBtn = new JButton("Login!");
         loginBtn.addActionListener(e -> {
+            int selected = 0;
+            for(int i=0;i<avatarsType.length; i++){
+                if(avatarButton[i].isSelected()){
+                    selected = i;
+                }
+            }
             String userName = textField.getText();
             doLogin(userName);
         });
@@ -147,7 +168,7 @@ public class ClientGUI {
         chatPanel.add(Box.createRigidArea(new Dimension(1, 10)));
         chatPanel.add(continueLabel);
         chatPanel.add(loginPanel);
-
+        chatPanel.add(avatarPanel);
     }
 
     private void createLeftPanel() {
