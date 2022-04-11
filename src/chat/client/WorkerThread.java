@@ -10,7 +10,7 @@ import java.io.ObjectInputStream;
 
 public class WorkerThread extends Thread {
     private final ObjectInputStream ois;
-    private Client client;
+    private final Client client;
 
     public WorkerThread(ObjectInputStream ois, Client client) {
         this.ois = ois;
@@ -29,7 +29,7 @@ public class WorkerThread extends Thread {
                     client.incomingChat(new Chat(obj.getSender(), obj.getText()));
                 }
                 else if(obj.getType().equals("Client")){
-                    System.out.println(obj.getClients());
+                    System.out.println(obj.getClientsList());
                     client.setClients(obj.getClients());
 
                     client.updateClientListUI();

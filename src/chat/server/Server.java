@@ -1,6 +1,7 @@
 package chat.server;
 
 import chat.object.Object;
+import chat.object.Person;
 import utils.CColors;
 import utils.Dbg;
 
@@ -13,7 +14,7 @@ import java.util.Hashtable;
 
 public class Server {
     private Hashtable<String, WorkerThread> clientList;
-    private ArrayList<String> clients = new ArrayList<>();
+    private ArrayList<Person> clients = new ArrayList<>();
     private ServerSocket server;
 
     public Server() {
@@ -56,19 +57,19 @@ public class Server {
         }
     }
 
-    public void addClient(String userName){
-        clients.add(userName);
+    public void addClient(Person client){
+        clients.add(client);
     }
 
     public void removeClient(String userName){
         clients.remove(userName);
     }
 
-    public ArrayList<String> getClients(){
+    public ArrayList<Person> getClients(){
         return clients;
     }
 
-    public void setClients(ArrayList<String> clients) {
+    public void setClients(ArrayList<Person> clients) {
         this.clients = clients;
     }
 
@@ -95,7 +96,7 @@ public class Server {
         obj.setType("Client");
         sendToAll(obj);
 
-        System.out.println("Client list: " + obj.getClients());
+        System.out.println("Client list: " + obj.getClientsList());
 
     }
 

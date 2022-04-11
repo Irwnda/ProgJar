@@ -2,6 +2,7 @@ package chat.gui;
 
 import chat.client.Client;
 import chat.object.Chat;
+import chat.object.Person;
 import utils.Dbg;
 import utils.Palette;
 
@@ -23,15 +24,16 @@ import static java.awt.Image.SCALE_SMOOTH;
 
 public class ClientGUI {
     // Data
-    private ArrayList<String> clientList;
-    private ArrayList<Chat> chatList = new ArrayList<Chat>();
-    private JList<ChatBox> chatBoxList = new JList<ChatBox>();
+    String[] avatarsType = { "initials", "male", "female", "human", "identicon", "bottts", "avataaars", "jdenticon", "gridy", "micah"};
+    private ArrayList<Person> clientList;
+    private final ArrayList<Chat> chatList = new ArrayList<>();
+    private final JList<ChatBox> chatBoxList = new JList<>();
 
     // Component
     public JPanel mainPanel;
     private JPanel leftPanel;
     private JPanel rightPanel;
-    private Client client;
+    private final Client client;
     private JPanel topPanel, bottomPanel, midPanel;
 
     private JTextArea textArea;
@@ -45,13 +47,11 @@ public class ClientGUI {
     private JScrollPane scrollPanel;
     private JPanel allChatPanel;
 
-    private JFrame frame;
-
     public ClientGUI(Client client){
         this.client = client;
         this.clientList = client.getClients();
 
-        frame = new JFrame();
+        JFrame frame = new JFrame();
         frame.setMinimumSize(new Dimension(300, 720));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBackground(Color.BLACK);
@@ -87,19 +87,17 @@ public class ClientGUI {
         }
 
         JLabel targetLabel = new JLabel(client.getTargetSend());
-        URL url = null;
+        URL url;
         try {
             if(client.getTargetSend().equals("global"))
                 url = new URL("https://cdn-icons-png.flaticon.com/512/1383/1383676.png");
             else
-                url = new URL("https://avatars.dicebear.com/api/initials/"+client.getTargetSend()+".png");
+                url = new URL("https://avatars.dicebear.com/api/"+client.getTargetProfile()+"/"+client.getTargetSend()+".png");
 
             Image myPicture = ImageIO.read(url);
             targetLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
             targetLabel.setIcon(new ImageIcon(myPicture.getScaledInstance(40, 40, SCALE_SMOOTH)));
             headerPanel.add(targetLabel, BorderLayout.BEFORE_LINE_BEGINS);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -137,12 +135,32 @@ public class ClientGUI {
         JLabel continueLabel = new JLabel("Enter Username to Continue !");
         continueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        JPanel avatarPanel = new JPanel(new FlowLayout());
+        avatarPanel.setBackground(Palette.BIRUMUDA);
+        JLabel avatarLabel = new JLabel("Avatar:");
+        JRadioButton[] avatarButton = new JRadioButton[10];
+        ButtonGroup avatarBtnGroup = new ButtonGroup();
+        avatarPanel.add(avatarLabel);
+        for(int i=0; i<avatarsType.length; i++){
+            avatarButton[i] = new JRadioButton();
+            avatarButton[i].setText(avatarsType[i]);
+            avatarButton[i].setBackground(Palette.BIRUMUDA);
+            avatarBtnGroup.add(avatarButton[i]);
+            avatarPanel.add(avatarButton[i]);
+        }
+
         JTextField textField = new JTextField();
         textField.setPreferredSize( new Dimension( 200, 24 ) );
         JButton loginBtn = new JButton("Login!");
         loginBtn.addActionListener(e -> {
+            int selected = 0;
+            for(int i=0;i<avatarsType.length; i++){
+                if(avatarButton[i].isSelected()){
+                    selected = i;
+                }
+            }
             String userName = textField.getText();
-            doLogin(userName);
+            doLogin(userName, avatarsType[selected]);
         });
 
         JPanel loginPanel = new JPanel();
@@ -156,7 +174,7 @@ public class ClientGUI {
         chatPanel.add(Box.createRigidArea(new Dimension(1, 10)));
         chatPanel.add(continueLabel);
         chatPanel.add(loginPanel);
-
+        chatPanel.add(avatarPanel);
     }
 
     private void createLeftPanel() {
@@ -172,9 +190,9 @@ public class ClientGUI {
         btnDc.addActionListener(e -> doDisconnect());
     }
 
-    public void doLogin(String userName) {
+    public void doLogin(String userName, String profileType) {
         client.setUserName(userName);
-        client.registerClient(userName);
+        client.registerClient(userName, profileType);
 
         status.setText("Connected : " + client.getUserName());
         status.setForeground(Color.BLUE);
@@ -208,7 +226,7 @@ public class ClientGUI {
         leftPanel.removeAll();
 
         clientList = client.getClients();
-        Dbg.debugKu("Updating client with : " + clientList);
+        Dbg.debugKu("Updating client with : " + client.getClientsList());
 
         try {
             GridBagConstraints gbc = new GridBagConstraints();
@@ -230,8 +248,9 @@ public class ClientGUI {
             leftPanel.add(globalLabel, gbc);
 
             for (int i = 0; i < clientList.size(); i++) {
-                String uname = clientList.get(i);
-                URL url = new URL("https://avatars.dicebear.com/api/initials/"+uname+".png");
+                String uname = clientList.get(i).getUserName();
+                String profileType = clientList.get(i).getProfileType();
+                URL url = new URL("https://avatars.dicebear.com/api/"+profileType+"/"+uname+".png");
                 Image myPicture = ImageIO.read(url);
 
                 JLabel clientLabel = new JLabel(uname);
@@ -241,6 +260,7 @@ public class ClientGUI {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         client.setTargetSend(uname);
+                        client.setTargetProfile(profileType);
                         updateHeaderPanel();
                     }
                 });
