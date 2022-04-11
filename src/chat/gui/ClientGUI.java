@@ -1,6 +1,7 @@
 package chat.gui;
 
 import chat.client.Client;
+import chat.object.Chat;
 import utils.Dbg;
 import utils.Palette;
 
@@ -23,6 +24,8 @@ import static java.awt.Image.SCALE_SMOOTH;
 public class ClientGUI {
     // Data
     private ArrayList<String> clientList;
+    private ArrayList<Chat> chatList = new ArrayList<Chat>();
+    private JList<ChatBox> chatBoxList = new JList<ChatBox>();
 
     // Component
     public JPanel mainPanel;
@@ -39,6 +42,8 @@ public class ClientGUI {
     private JPanel statusBar;
     private JLabel status;
     private JPanel headerPanel;
+    private JScrollPane scrollPanel;
+    private JPanel allChatPanel;
 
     private JFrame frame;
 
@@ -75,6 +80,11 @@ public class ClientGUI {
 
     public void updateHeaderPanel() {
         headerPanel.removeAll();
+        if(allChatPanel !=null) {
+            allChatPanel.removeAll();
+            allChatPanel.revalidate();
+            allChatPanel.repaint();
+        }
 
         JLabel targetLabel = new JLabel(client.getTargetSend());
         URL url = null;
@@ -107,11 +117,10 @@ public class ClientGUI {
         headerPanel.setBackground(Palette.ABU);
 
         updateHeaderPanel();
-
-        JScrollPane scroller = new JScrollPane();
+        updateScrollPanel();
 
         chatPanel.add(headerPanel);
-        chatPanel.add(scroller);
+        chatPanel.add(scrollPanel);
 
         chatPanel.revalidate();
         chatPanel.repaint();
@@ -247,5 +256,44 @@ public class ClientGUI {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void addChat(Chat chat) {
+        chatList.add(chat);
+
+        chatPanel.remove(scrollPanel);
+        updateScrollPanel();
+    }
+
+    private void updateScrollPanel() {
+        allChatPanel = new JPanel();
+        allChatPanel.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.PAGE_END;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5,5,5,5);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+//        allChatPanel.add(new ChatBox(new Chat("Server : ", "Assalamualaikum everyone")), gbc);
+
+        for (int i = 0; i < chatList.size(); i++) {
+            gbc.gridy = i+1;
+            JPanel chtBox = new ChatBox(chatList.get(i));
+            allChatPanel.add(chtBox, gbc);
+        }
+
+        allChatPanel.setPreferredSize(new Dimension(360, 600));
+        scrollPanel = new JScrollPane(allChatPanel);
+        allChatPanel.setAutoscrolls(true);
+        scrollPanel.setPreferredSize(new Dimension(400, 600));
+
+        chatPanel.add(scrollPanel);
+
+//        scrollPanel.revalidate();
+//        scrollPanel.repaint();
+        chatPanel.revalidate();
+        chatPanel.repaint();
     }
 }

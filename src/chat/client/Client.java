@@ -1,6 +1,7 @@
 package chat.client;
 
 import chat.gui.ClientGUI;
+import chat.object.Chat;
 import chat.object.Object;
 
 import java.io.*;
@@ -133,5 +134,9 @@ public class Client {
 
     public void updateClientListUI() {
         clientGUI.updateClientList();
+    }
+
+    public void incomingChat(Chat chat) {
+        clientGUI.addChat(chat);
     }
 }

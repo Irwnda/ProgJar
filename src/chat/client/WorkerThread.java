@@ -1,5 +1,6 @@
 package chat.client;
 
+import chat.object.Chat;
 import chat.object.Object;
 import utils.CColors;
 import utils.Dbg;
@@ -25,6 +26,7 @@ public class WorkerThread extends Thread {
 
                 if(obj.getType().equals("Message")){
                     System.out.println(obj.getSender() + ": " + obj.getText());
+                    client.incomingChat(new Chat(obj.getSender(), obj.getText()));
                 }
                 else if(obj.getType().equals("Client")){
                     System.out.println(obj.getClients());
