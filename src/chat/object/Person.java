@@ -1,22 +1,24 @@
 package chat.object;
 
-public class Person {
-    private String fullName;
-    private int age;
+import java.io.Serializable;
 
-    public String getFullName() {
-        return fullName;
+public class Person implements Serializable {
+    private String userName;
+    private String profileType;
+
+    public String getUserName() {
+        return userName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public int getAge() {
-        return age;
+    public String getProfileType() {
+        return profileType;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setProfileType(String profileType) {
+        this.profileType = profileType;
     }
 }

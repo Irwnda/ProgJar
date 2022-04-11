@@ -1,6 +1,7 @@
 package chat.gui;
 
 import chat.client.Client;
+import chat.object.Person;
 import utils.Dbg;
 import utils.Palette;
 
@@ -22,8 +23,8 @@ import static java.awt.Image.SCALE_SMOOTH;
 
 public class ClientGUI {
     // Data
-    String[] avatarsType = {"male", "female", "human", "identicon", "initials", "bottts", "avataaars", "jdenticon", "gridy", "micah"};
-    private ArrayList<String> clientList;
+    String[] avatarsType = { "initials", "male", "female", "human", "identicon", "bottts", "avataaars", "jdenticon", "gridy", "micah"};
+    private ArrayList<Person> clientList;
 
     // Component
     public JPanel mainPanel;
@@ -83,7 +84,7 @@ public class ClientGUI {
             if(client.getTargetSend().equals("global"))
                 url = new URL("https://cdn-icons-png.flaticon.com/512/1383/1383676.png");
             else
-                url = new URL("https://avatars.dicebear.com/api/initials/"+client.getTargetSend()+".png");
+                url = new URL("https://avatars.dicebear.com/api/"+client.getTargetProfile()+"/"+client.getTargetSend()+".png");
 
             Image myPicture = ImageIO.read(url);
             targetLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -154,7 +155,7 @@ public class ClientGUI {
                 }
             }
             String userName = textField.getText();
-            doLogin(userName);
+            doLogin(userName, avatarsType[selected]);
         });
 
         JPanel loginPanel = new JPanel();
@@ -184,9 +185,9 @@ public class ClientGUI {
         btnDc.addActionListener(e -> doDisconnect());
     }
 
-    public void doLogin(String userName) {
+    public void doLogin(String userName, String profileType) {
         client.setUserName(userName);
-        client.registerClient(userName);
+        client.registerClient(userName, profileType);
 
         status.setText("Connected : " + client.getUserName());
         status.setForeground(Color.BLUE);
@@ -220,7 +221,7 @@ public class ClientGUI {
         leftPanel.removeAll();
 
         clientList = client.getClients();
-        Dbg.debugKu("Updating client with : " + clientList);
+        Dbg.debugKu("Updating client with : " + client.getClientsList());
 
         try {
             GridBagConstraints gbc = new GridBagConstraints();
@@ -231,7 +232,8 @@ public class ClientGUI {
 
             JLabel globalLabel = new JLabel("Global");
             Image globalIcon = ImageIO.read(new URL("https://cdn-icons-png.flaticon.com/512/1383/1383676.png"));
-            globalLabel.setIcon(new ImageIcon(globalIcon.getScaledInstance(20, 20, SCALE_SMOOTH)));
+            globalLabel.setIcon(new ImageIcon(globalIcon.getScaledInstance(25, 25, SCALE_SMOOTH)));
+            globalLabel.setFont(new Font("Arial", Font.PLAIN, 25));
             globalLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -242,17 +244,20 @@ public class ClientGUI {
             leftPanel.add(globalLabel, gbc);
 
             for (int i = 0; i < clientList.size(); i++) {
-                String uname = clientList.get(i);
-                URL url = new URL("https://avatars.dicebear.com/api/initials/"+uname+".png");
+                String uname = clientList.get(i).getUserName();
+                String profileType = clientList.get(i).getProfileType();
+                URL url = new URL("https://avatars.dicebear.com/api/"+profileType+"/"+uname+".png");
                 Image myPicture = ImageIO.read(url);
 
                 JLabel clientLabel = new JLabel(uname);
                 clientLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-                clientLabel.setIcon(new ImageIcon(myPicture.getScaledInstance(20, 20, SCALE_SMOOTH)));
+                clientLabel.setIcon(new ImageIcon(myPicture.getScaledInstance(25, 25, SCALE_SMOOTH)));
+                clientLabel.setFont(new Font("Arial", Font.PLAIN, 25));
                 clientLabel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         client.setTargetSend(uname);
+                        client.setTargetProfile(profileType);
                         updateHeaderPanel();
                     }
                 });

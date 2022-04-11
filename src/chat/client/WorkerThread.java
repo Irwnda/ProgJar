@@ -27,7 +27,7 @@ public class WorkerThread extends Thread {
                     System.out.println(obj.getSender() + ": " + obj.getText());
                 }
                 else if(obj.getType().equals("Client")){
-                    System.out.println(obj.getClients());
+                    System.out.println(obj.getClientsList());
                     client.setClients(obj.getClients());
 
                     client.updateClientListUI();

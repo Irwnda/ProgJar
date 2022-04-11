@@ -2,6 +2,7 @@ package chat.client;
 
 import chat.gui.ClientGUI;
 import chat.object.Object;
+import chat.object.Person;
 
 import java.io.*;
 import java.net.Socket;
@@ -12,10 +13,11 @@ import java.util.logging.Logger;
 public class Client {
     private String userName;
     private ObjectOutputStream ous;
-    private static ArrayList<String> clients = new ArrayList<>();
+    private static ArrayList<Person> clients = new ArrayList<>();
     private Socket socket;
     private ClientGUI clientGUI;
     private String targetSend = "global";
+    private String targetProfile = "initials";
 
     public Client() {
          clientGUI = new ClientGUI(this);
@@ -62,14 +64,17 @@ public class Client {
         }
     }
 
-    public void registerClient(String userName){
+    public void registerClient(String userName, String profileType){
         try {
             requestClientList();
 
 //            clients.add(userName);
             // RAWAN TELATTT
+            Person client = new Person();
+            client.setUserName(userName);
+            client.setProfileType(profileType);
             Thread.sleep(2000);
-            clients.add(userName);
+            clients.add(client);
 
             Object personObj = new Object();
             personObj.setSender(userName);
@@ -88,7 +93,12 @@ public class Client {
 
     public void disconnectClient(String userName){
         try {
-            clients.remove(userName);
+            for(int i=0; i<clients.size(); i++){
+                if(clients.get(i).getUserName().equals(userName)){
+                    clients.remove(i);
+                    break;
+                }
+            }
 
             Object personObj = new Object();
             personObj.setSender(userName);
@@ -111,11 +121,11 @@ public class Client {
         this.userName = userName;
     }
 
-    public ArrayList<String> getClients() {
+    public ArrayList<Person> getClients() {
         return clients;
     }
 
-    public void setClients(ArrayList<String> clients) {
+    public void setClients(ArrayList<Person> clients) {
         Client.clients = clients;
     }
 
@@ -127,11 +137,35 @@ public class Client {
         this.targetSend = targetSend;
     }
 
+    public String getTargetProfile() {
+        return targetProfile;
+    }
+
+    public void setTargetProfile(String targetProfile) {
+        this.targetProfile = targetProfile;
+    }
+
     public static void main(String[] args) {
         Client clientRunner = new Client();
     }
 
     public void updateClientListUI() {
         clientGUI.updateClientList();
+    }
+
+    public ArrayList<String> getClientsList(){
+        ArrayList<String> clientList = new ArrayList<>();
+        for(int i=0; i<clients.size(); i++){
+            clientList.add(clients.get(i).getUserName());
+        }
+        return clientList;
+    }
+
+    public ArrayList<String> getClientsProfile(){
+        ArrayList<String> clientList = new ArrayList<>();
+        for(int i=0; i<clients.size(); i++){
+            clientList.add(clients.get(i).getProfileType());
+        }
+        return clientList;
     }
 }

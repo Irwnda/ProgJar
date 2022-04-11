@@ -11,7 +11,7 @@ public class Object implements Serializable {
     private String receiver;
     private String text;
     private int action;
-    private ArrayList<String> clients;
+    private ArrayList<Person> clients;
     private String type;    // 'Message' or 'Client'
 
     public String getSender() {
@@ -36,9 +36,9 @@ public class Object implements Serializable {
 
     public void setAction(int action){ this.action = action; }
 
-    public ArrayList<String> getClients(){ return clients; }
+    public ArrayList<Person> getClients(){ return clients; }
 
-    public void setClients(ArrayList<String> clients) { this.clients = clients; }
+    public void setClients(ArrayList<Person> clients) { this.clients = clients; }
 
     public String getType() {
         return type;
@@ -56,13 +56,30 @@ public class Object implements Serializable {
         this.receiver = receiver;
     }
 
+    public ArrayList<String> getClientsList(){
+        ArrayList<String> clientList = new ArrayList<>();
+        for(int i=0; i<clients.size(); i++){
+            clientList.add(clients.get(i).getUserName());
+        }
+        return clientList;
+    }
+
+    public ArrayList<String> getClientsProfile(){
+        ArrayList<String> clientList = new ArrayList<>();
+        for(int i=0; i<clients.size(); i++){
+            clientList.add(clients.get(i).getProfileType());
+        }
+        return clientList;
+    }
+
     @Override
     public String toString() {
         return "Object{" +
                 "sender='" + sender + '\'' +
                 ", text='" + text + '\'' +
                 ", action=" + action +
-                ", clients=" + clients +
+                ", clientsList=" + getClientsList() +
+                ", clientsProfile=" + getClientsProfile() +
                 ", type='" + type + '\'' +
                 '}';
     }
