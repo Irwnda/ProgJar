@@ -61,8 +61,8 @@ public class Server {
         clients.add(client);
     }
 
-    public void removeClient(String userName){
-        clients.remove(userName);
+    public void removeClient(Person person){
+        clients.remove(person);
     }
 
     public ArrayList<Person> getClients(){
@@ -84,8 +84,18 @@ public class Server {
         }
     }
 
-    public void sendToAClient(Object obj, String clientId) {
+    public void sendToAClient(Object obj, String clientId, String receiver) {
+        String receiverId = "";
+        String[] clientKey = clientList.keySet().toArray(new String[0]);
+        for(int i=0; i<clients.size(); i++){
+            if(clients.get(i).getUserName().equals(receiver)){
+                receiverId = clientKey[i];
+                System.out.println(receiver+": "+clientKey[i]);
+            }
+        }
         WorkerThread wt = clientList.get(clientId);
+        wt.send(obj);
+        wt = clientList.get(receiverId);
         wt.send(obj);
 
     }

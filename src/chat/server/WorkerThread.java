@@ -34,7 +34,7 @@ public class WorkerThread extends Thread {
                         server.sendToAll(obj);
                     else {
                         String clientId = socket.getInetAddress().getHostAddress() + ":" + socket.getPort();
-                        server.sendToAClient(obj, clientId);
+                        server.sendToAClient(obj, clientId, obj.getReceiver());
                     }
                 }
                 else if(obj.getType().equals("Client")){
