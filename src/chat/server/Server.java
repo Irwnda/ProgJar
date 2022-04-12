@@ -8,18 +8,18 @@ import utils.Dbg;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
 public class Server {
     private Hashtable<String, WorkerThread> clientList;
+    private ArrayList<String> clientsId;
     private ArrayList<Person> clients = new ArrayList<>();
     private ServerSocket server;
 
     public Server() {
         try {
             this.clientList = new Hashtable<>();
+            this.clientsId = new ArrayList<>();
             this.server = new ServerSocket(9000);
 
             initiateServer();
@@ -38,6 +38,7 @@ public class Server {
 
                 Dbg.debugKu("WT running for clientId : " + clientId);
                 clientList.put(clientId, wt);
+                clientsId.add(clientId);
                 wt.start();
 
             } catch (IOException e) {
@@ -86,11 +87,10 @@ public class Server {
 
     public void sendToAClient(Object obj, String clientId, String receiver) {
         String receiverId = "";
-        String[] clientKey = clientList.keySet().toArray(new String[0]);
         for(int i=0; i<clients.size(); i++){
             if(clients.get(i).getUserName().equals(receiver)){
-                receiverId = clientKey[i];
-                System.out.println(receiver+": "+clientKey[i]);
+                receiverId = clientsId.get(i);
+                Dbg.debugKu("[private receiver] " + receiver + ": " + receiverId);
             }
         }
         WorkerThread wt = clientList.get(clientId);
