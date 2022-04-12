@@ -26,7 +26,7 @@ public class WorkerThread extends Thread {
 
                 if(obj.getType().equals("Message")){
                     System.out.println(obj.getSender() + ": " + obj.getText());
-                    client.incomingChat(new Chat(obj.getSender(), obj.getText()));
+                    client.incomingChat(new Chat(obj.getSender(), obj.getText(), client.getUserName().equals(obj.getSender())));
                 }
                 else if(obj.getType().equals("Client")){
                     System.out.println(obj.getClientsList());

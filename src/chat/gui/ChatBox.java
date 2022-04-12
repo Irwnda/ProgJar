@@ -8,7 +8,11 @@ import java.awt.*;
 public class ChatBox extends JPanel {
     ChatBox(Chat chat){
 //        setLayout(new FlowLayout());
-        setBackground(Color.ORANGE);
+        if(chat.isSender)
+            setBackground(Color.cyan);
+        else
+            setBackground(Color.ORANGE);
+
         JLabel sender = new JLabel(chat.sender + " : ");
         JLabel text = new JLabel(chat.text);
 
